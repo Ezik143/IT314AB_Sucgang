@@ -91,20 +91,75 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: .center,
           children: [
-            SizedBox(
-              width: 200,
-              height: 200,
-              child: Image.asset('asset/images/Cat.jpg', fit: BoxFit.cover),
+            //profile
+            Card(
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  mainAxisAlignment: .center,
+                  children: [
+                    CircleAvatar(
+                      radius: 40,
+                      backgroundImage: AssetImage("asset/images/Cat.jpg"),
+                    ),
+
+                    SizedBox(width: 10, height: 20),
+                    Text(
+                      'jake fiel Sucgang',
+                      style: TextStyle(color: Colors.teal),
+                    ),
+                    SizedBox(width: 10, height: 20),
+
+                    Text("BSIT-3", style: TextStyle(color: Colors.teal)),
+                    SizedBox(width: 10, height: 20),
+                    Text(
+                      "My First Flutter Application",
+                      style: TextStyle(color: Colors.teal),
+                    ),
+                    SizedBox(width: 10, height: 20),
+
+                    Text(
+                      "Thursday, July 30, 2026",
+                      style: TextStyle(color: Colors.teal),
+                    ),
+
+                    SizedBox(width: 10, height: 20),
+
+                    Text(
+                      "Hobby: watching youtube",
+                      style: TextStyle(color: Colors.teal),
+                    ),
+
+                    SizedBox(width: 10, height: 20),
+                    Row(
+                      children: [
+                        Text("pizza", style: TextStyle(color: Colors.teal)),
+                        SizedBox(width: 10, height: 20),
+                        Text("burger", style: TextStyle(color: Colors.teal)),
+                      ],
+                    ),
+
+                    SizedBox(width: 10, height: 20),
+                  ],
+                ),
+              ),
             ),
-            Text('jake fiel Sucgang', style: TextStyle(color: Colors.teal)),
-            Text("BSIT-3", style: TextStyle(color: Colors.teal)),
-            Text(
-              "My First Flutter Application",
-              style: TextStyle(color: Colors.teal),
-            ),
-            Text(
-              "Thursday, July 30, 2026",
-              style: TextStyle(color: Colors.teal),
+
+            Card(
+              child: Padding(
+                padding: EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: .start,
+                  children: [
+                    Text("My Favorites"),
+                    Text("Favorite Game"),
+                    Text("Favorite Food"),
+                    Text("Favorite Movie"),
+                    SizedBox(height: 20),
+                    Row(children: [Text("SOMETHING THIS IS ROW")]),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
