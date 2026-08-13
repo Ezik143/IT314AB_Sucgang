@@ -1,4 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:my_first_flutter_app/widgets/profile2.dart';
+import 'package:my_first_flutter_app/widgets/profile3.dart';
+import 'package:my_first_flutter_app/widgets/profile4.dart';
+import 'package:my_first_flutter_app/widgets/profile5.dart';
+import 'package:my_first_flutter_app/widgets/profile6.dart';
+import 'package:my_first_flutter_app/widgets/profile7.dart';
+import 'package:my_first_flutter_app/widgets/profiles.dart';
+import 'package:my_first_flutter_app/widgets/profiles1.dart';
 
 void main() {
   runApp(const MyApp());
@@ -75,93 +83,20 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: .center,
-          children: [
-            //profile
-            Card(
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  mainAxisAlignment: .center,
-                  children: [
-                    CircleAvatar(
-                      radius: 40,
-                      backgroundImage: AssetImage("asset/images/Cat.jpg"),
-                    ),
-
-                    SizedBox(width: 10, height: 20),
-                    Text(
-                      'jake fiel Sucgang',
-                      style: TextStyle(color: Colors.teal),
-                    ),
-                    SizedBox(width: 10, height: 20),
-
-                    Text("BSIT-3", style: TextStyle(color: Colors.teal)),
-                    SizedBox(width: 10, height: 20),
-                    Text(
-                      "My First Flutter Application",
-                      style: TextStyle(color: Colors.teal),
-                    ),
-                    SizedBox(width: 10, height: 20),
-
-                    Text(
-                      "Thursday, July 30, 2026",
-                      style: TextStyle(color: Colors.teal),
-                    ),
-
-                    SizedBox(width: 10, height: 20),
-
-                    Text(
-                      "Hobby: watching youtube",
-                      style: TextStyle(color: Colors.teal),
-                    ),
-
-                    SizedBox(width: 10, height: 20),
-                    Row(
-                      children: [
-                        Text("pizza", style: TextStyle(color: Colors.teal)),
-                        SizedBox(width: 10, height: 20),
-                        Text("burger", style: TextStyle(color: Colors.teal)),
-                      ],
-                    ),
-
-                    SizedBox(width: 10, height: 20),
-                  ],
-                ),
-              ),
-            ),
-
-            Card(
-              child: Padding(
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: .start,
-                  children: [
-                    Text("My Favorites"),
-                    Text("Favorite Game"),
-                    Text("Favorite Food"),
-                    Text("Favorite Movie"),
-                    SizedBox(height: 20),
-                    Row(children: [Text("SOMETHING THIS IS ROW")]),
-                  ],
-                ),
-              ),
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ProfileWidget(),
+              Profile2Widget(),
+              Profile3Widget(),
+              Profile4Widget(),
+              Profile5Widget(),
+              Profile6Widget(),
+              Profile7Widget(),
+              Profile8Widget(),
+            ],
+          ),
         ),
       ),
     );
