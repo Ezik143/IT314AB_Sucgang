@@ -1,15 +1,18 @@
-class Student {
-  final String imagePath;
-  final String name;
-  final String course;
-  final String yearLevel;
-  final int age;
-  final String hobby;
-  final String studentId;
-  final String email;
-  final String favoriteSubject;
+import 'dart:ffi';
 
-  const Student({
+class Student {
+  String imagePath;
+  String name;
+  String course;
+  String yearLevel;
+  int age;
+  String hobby;
+  String studentId;
+  String email;
+  String favoriteSubject;
+  bool isFavorite;
+
+  Student({
     required this.imagePath,
     required this.name,
     required this.course,
@@ -19,5 +22,6 @@ class Student {
     required this.studentId,
     required this.email,
     required this.favoriteSubject,
+    required this.isFavorite,
   });
 }

@@ -1,10 +1,6 @@
 import 'package:my_first_flutter_app/Models/student.dart';
 
-/// Students in their original (insertion) order.
-///
-/// This list is deliberately unsorted so we can demonstrate how Dart
-/// reorders items inside a `List`.
-const List<Student> _studentsInOriginalOrder = [
+final List<Student> _studentsInOriginalOrder = [
   Student(
     imagePath: 'asset/images/Cat.jpg',
     name: 'John the Cat',
@@ -15,6 +11,7 @@ const List<Student> _studentsInOriginalOrder = [
     studentId: '2021-001',
     email: 'john.the.cat@student.edu',
     favoriteSubject: 'Mathematics',
+    isFavorite: false,
   ),
   Student(
     imagePath: 'asset/images/cat2.jpg',
@@ -26,6 +23,7 @@ const List<Student> _studentsInOriginalOrder = [
     studentId: '2021-002',
     email: 'mittens@student.edu',
     favoriteSubject: 'Physics',
+    isFavorite: false,
   ),
   Student(
     imagePath: 'asset/images/cat3.jpg',
@@ -37,6 +35,7 @@ const List<Student> _studentsInOriginalOrder = [
     studentId: '2021-003',
     email: 'whiskers@student.edu',
     favoriteSubject: 'Computer Science',
+    isFavorite: false,
   ),
   Student(
     imagePath: 'asset/images/cat4.jpg',
@@ -48,6 +47,7 @@ const List<Student> _studentsInOriginalOrder = [
     studentId: '2021-004',
     email: 'shadow@student.edu',
     favoriteSubject: 'Information Systems',
+    isFavorite: false,
   ),
   Student(
     imagePath: 'asset/images/cat5.jpg',
@@ -59,6 +59,7 @@ const List<Student> _studentsInOriginalOrder = [
     studentId: '2021-005',
     email: 'milo@student.edu',
     favoriteSubject: 'Mathematics',
+    isFavorite: false,
   ),
   Student(
     imagePath: 'asset/images/cat2.jpg',
@@ -70,15 +71,9 @@ const List<Student> _studentsInOriginalOrder = [
     studentId: '2021-006',
     email: 'new.student@student.edu',
     favoriteSubject: 'Statistics',
+    isFavorite: false,
   ),
 ];
 
-/// Students sorted alphabetically by name.
-///
-/// Dart's [`List.sort`](https://api.dart.dev/stable/dart-core/List/sort.html)
-/// rearranges the items inside the list **in place** using a comparison
-/// function. To avoid mutating the original insertion order, we first copy
-/// the base list with `List.of(...)`, then sort the copy with a comparator
-/// that compares each student's `name`.
-final List<Student> students = List.of(_studentsInOriginalOrder)
+List<Student> students = List.of(_studentsInOriginalOrder)
   ..sort((a, b) => a.name.compareTo(b.name));
