@@ -12,7 +12,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.black)),
+      theme: ThemeData(
+        colorScheme: .fromSeed(seedColor: const Color.fromARGB(126, 0, 0, 0)),
+      ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -87,34 +89,64 @@ class _MyHomePageState extends State<MyHomePage> {
               width: double.infinity,
               child: Image.asset("assets/Map/ascent.jpg", fit: BoxFit.fill),
             ),
-            Column(
-              children: [
-                SizedBox(
-                  child: Row(
-                    children: [
-                      Text("My Team"),
-                      Icon(Icons.bar_chart),
-                      Icon(Icons.face),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Card(
-                      child: CircleAvatar(
-                        backgroundImage: AssetImage(
-                          "assets/Agents/brimstone.webp",
-                        ),
-                      ),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.black,
+                border: Border.all(color: Colors.white10),
+              ),
+              child: Column(
+                children: [
+                  SizedBox(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text("My Team", style: TextStyle(color: Colors.white)),
+                        Icon(Icons.bar_chart, color: Colors.white),
+                        Icon(Icons.face, color: Colors.white),
+                      ],
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.black,
+                border: Border.all(color: Colors.white10),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Card(
+                    color: Colors.black12,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadiusGeometry.zero,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        CircleAvatar(
+                          backgroundImage: AssetImage(
+                            "assets/Agents/brimstone.webp",
+                          ),
+                        ),
+                        Text("Brmstone", style: TextStyle(color: Colors.white)),
+                        Text("261", style: TextStyle(color: Colors.white)),
+                        Text("23/21/6", style: TextStyle(color: Colors.white)),
+                        DropdownButton(
+                          items: List.empty(),
+                          onChanged: (value) {},
+                          hint: Text(
+                            "Details",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
