@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 void main() {
@@ -96,20 +94,33 @@ class _MyHomePageState extends State<MyHomePage> {
               children: [SizedBox(child: Image.asset("assets/Map/ascent.jpg"))],
             ),
 
-            Row(
-              children: [
-                Expanded(
-                  flex: 5,
-                  child: Text("My Team", style: TextStyle(color: Colors.white)),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Icon(Icons.bar_chart, color: Colors.white),
-                ),
-                Expanded(flex: 3, child: Icon(Icons.face, color: Colors.white)),
-              ],
+            //Header MY TEAM
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.white),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 5,
+                    child: Text(
+                      "My Team",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Icon(Icons.bar_chart, color: Colors.white),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Icon(Icons.face, color: Colors.white),
+                  ),
+                ],
+              ),
             ),
 
+            //FOR BRIMSTONE
             Card(
               shape: Border.all(color: Colors.white),
               color: Colors.black,
@@ -135,14 +146,436 @@ class _MyHomePageState extends State<MyHomePage> {
                         ],
                       ),
                     ),
-
                     Expanded(flex: 2, child: Center(child: Text("261"))),
-
                     Expanded(
                       flex: 3,
                       child: Column(
                         children: [
                           Text("23/21/6"),
+                          DropdownButton(
+                            items: List.empty(),
+                            onChanged: (value) {},
+                            hint: Text("details"),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            //FOR cypher
+            Card(
+              shape: Border.all(color: Colors.white),
+              color: Colors.black,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundImage: AssetImage(
+                              "assets/Agents/cypher.webp",
+                            ),
+                          ),
+                          SizedBox(width: 10, height: 10),
+                          Text("cypher", style: TextStyle(color: Colors.white)),
+                        ],
+                      ),
+                    ),
+                    Expanded(flex: 2, child: Center(child: Text("190"))),
+                    Expanded(
+                      flex: 3,
+                      child: Column(
+                        children: [
+                          Text("17/21/8"),
+                          DropdownButton(
+                            items: List.empty(),
+                            onChanged: (value) {},
+                            hint: Text("details"),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            //FOR phoenix
+            Card(
+              shape: Border.all(color: Colors.white),
+              color: Colors.black,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundImage: AssetImage(
+                              "assets/Agents/phoenix.webp",
+                            ),
+                          ),
+                          SizedBox(width: 10, height: 10),
+                          Text(
+                            "phoenix",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(flex: 2, child: Center(child: Text("89"))),
+                    Expanded(
+                      flex: 3,
+                      child: Column(
+                        children: [
+                          Text("9/8/1"),
+                          DropdownButton(
+                            items: List.empty(),
+                            onChanged: (value) {},
+                            hint: Text("details"),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            //For reyna
+            Card(
+              shape: Border.all(color: Colors.white),
+              color: Colors.black,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundImage: AssetImage(
+                              "assets/Agents/reyna.webp",
+                            ),
+                          ),
+                          SizedBox(width: 10, height: 10),
+                          Text(
+                            "phoenix",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(flex: 2, child: Center(child: Text("298"))),
+                    Expanded(
+                      flex: 3,
+                      child: Column(
+                        children: [
+                          Text("28/23/6"),
+                          DropdownButton(
+                            items: List.empty(),
+                            onChanged: (value) {},
+                            hint: Text("details"),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            //For raze
+            Card(
+              shape: Border.all(color: Colors.white),
+              color: Colors.black,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundImage: AssetImage(
+                              "assets/Agents/raze.webp",
+                            ),
+                          ),
+                          SizedBox(width: 10, height: 10),
+                          Text(
+                            "phoenix",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(flex: 2, child: Center(child: Text("259"))),
+                    Expanded(
+                      flex: 3,
+                      child: Column(
+                        children: [
+                          Text("21/21/10"),
+                          DropdownButton(
+                            items: List.empty(),
+                            onChanged: (value) {},
+                            hint: Text("details"),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            //Header
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.white),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 5,
+                    child: Text(
+                      "Opponent",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Icon(Icons.bar_chart, color: Colors.white),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Icon(Icons.face, color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+            //FOR BRIMSTONE
+            Card(
+              shape: Border.all(color: Colors.white),
+              color: Colors.black,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundImage: AssetImage(
+                              "assets/Agents/brimstone.webp",
+                            ),
+                          ),
+                          SizedBox(width: 10, height: 10),
+                          Text(
+                            "brimstone",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(flex: 2, child: Center(child: Text("261"))),
+                    Expanded(
+                      flex: 3,
+                      child: Column(
+                        children: [
+                          Text("23/21/6"),
+                          DropdownButton(
+                            items: List.empty(),
+                            onChanged: (value) {},
+                            hint: Text("details"),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            //FOR cypher
+            Card(
+              shape: Border.all(color: Colors.white),
+              color: Colors.black,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundImage: AssetImage(
+                              "assets/Agents/cypher.webp",
+                            ),
+                          ),
+                          SizedBox(width: 10, height: 10),
+                          Text("cypher", style: TextStyle(color: Colors.white)),
+                        ],
+                      ),
+                    ),
+                    Expanded(flex: 2, child: Center(child: Text("190"))),
+                    Expanded(
+                      flex: 3,
+                      child: Column(
+                        children: [
+                          Text("17/21/8"),
+                          DropdownButton(
+                            items: List.empty(),
+                            onChanged: (value) {},
+                            hint: Text("details"),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            //FOR phoenix
+            Card(
+              shape: Border.all(color: Colors.white),
+              color: Colors.black,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundImage: AssetImage(
+                              "assets/Agents/phoenix.webp",
+                            ),
+                          ),
+                          SizedBox(width: 10, height: 10),
+                          Text(
+                            "phoenix",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(flex: 2, child: Center(child: Text("89"))),
+                    Expanded(
+                      flex: 3,
+                      child: Column(
+                        children: [
+                          Text("9/8/1"),
+                          DropdownButton(
+                            items: List.empty(),
+                            onChanged: (value) {},
+                            hint: Text("details"),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            //For reyna
+            Card(
+              shape: Border.all(color: Colors.white),
+              color: Colors.black,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundImage: AssetImage(
+                              "assets/Agents/reyna.webp",
+                            ),
+                          ),
+                          SizedBox(width: 10, height: 10),
+                          Text(
+                            "phoenix",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(flex: 2, child: Center(child: Text("298"))),
+                    Expanded(
+                      flex: 3,
+                      child: Column(
+                        children: [
+                          Text("28/23/6"),
+                          DropdownButton(
+                            items: List.empty(),
+                            onChanged: (value) {},
+                            hint: Text("details"),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            //For raze
+            Card(
+              shape: Border.all(color: Colors.white),
+              color: Colors.black,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundImage: AssetImage(
+                              "assets/Agents/raze.webp",
+                            ),
+                          ),
+                          SizedBox(width: 10, height: 10),
+                          Text(
+                            "phoenix",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(flex: 2, child: Center(child: Text("259"))),
+                    Expanded(
+                      flex: 3,
+                      child: Column(
+                        children: [
+                          Text("21/21/10"),
                           DropdownButton(
                             items: List.empty(),
                             onChanged: (value) {},
