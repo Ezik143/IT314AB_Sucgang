@@ -122,6 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
             //FOR BRIMSTONE
             Card(
+              margin: EdgeInsets.zero,
               shape: Border.all(color: Colors.white),
               color: Colors.black,
               child: Padding(
@@ -167,6 +168,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
             //FOR cypher
             Card(
+              margin: EdgeInsets.zero,
               shape: Border.all(color: Colors.white),
               color: Colors.black,
               child: Padding(
@@ -209,6 +211,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
             //FOR phoenix
             Card(
+              margin: EdgeInsets.zero,
               shape: Border.all(color: Colors.white),
               color: Colors.black,
               child: Padding(
@@ -254,6 +257,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
             //For reyna
             Card(
+              margin: EdgeInsets.zero,
               shape: Border.all(color: Colors.white),
               color: Colors.black,
               child: Padding(
@@ -299,6 +303,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
             //For raze
             Card(
+              margin: EdgeInsets.zero,
               shape: Border.all(color: Colors.white),
               color: Colors.black,
               child: Padding(
@@ -344,6 +349,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
             //Header
             Container(
+              margin: EdgeInsets.zero,
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.white),
               ),
@@ -369,6 +375,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             //FOR BRIMSTONE
             Card(
+              margin: EdgeInsets.zero,
               shape: Border.all(color: Colors.white),
               color: Colors.black,
               child: Padding(
@@ -414,6 +421,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
             //FOR cypher
             Card(
+              margin: EdgeInsets.zero,
               shape: Border.all(color: Colors.white),
               color: Colors.black,
               child: Padding(
@@ -456,6 +464,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
             //FOR phoenix
             Card(
+              margin: EdgeInsets.zero,
               shape: Border.all(color: Colors.white),
               color: Colors.black,
               child: Padding(
@@ -501,6 +510,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
             //For reyna
             Card(
+              margin: EdgeInsets.zero,
               shape: Border.all(color: Colors.white),
               color: Colors.black,
               child: Padding(
@@ -546,6 +556,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
             //For raze
             Card(
+              margin: EdgeInsets.zero,
               shape: Border.all(color: Colors.white),
               color: Colors.black,
               child: Padding(
