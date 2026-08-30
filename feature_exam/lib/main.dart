@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -57,6 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
+      backgroundColor: Colors.black12,
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {},
@@ -64,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
           color: Colors.white,
         ),
         backgroundColor: Colors.black,
-        title: Text("Match Details"),
+        title: Text("Match Details", style: TextStyle(color: Colors.white)),
         titleTextStyle: TextStyle(color: Colors.white),
       ),
       body: SingleChildScrollView(
@@ -73,79 +76,83 @@ class _MyHomePageState extends State<MyHomePage> {
             Container(
               width: double.infinity,
               height: 50,
-              color: Colors.black38,
+              // color: Colors.black12,
+              decoration: BoxDecoration(
+                color: Colors.black12,
+                border: Border.all(color: Colors.white),
+              ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text("My Team"),
-                  Text("12"),
-                  Icon(Icons.gps_fixed_outlined),
-                  Text("Opponent"),
+                  Text("My Team", style: TextStyle(color: Colors.white)),
+                  Text("12", style: TextStyle(color: Colors.white)),
+                  Icon(Icons.gps_fixed_outlined, color: Colors.white),
+                  Text("14", style: TextStyle(color: Colors.white)),
+                  Text("Opponent", style: TextStyle(color: Colors.white)),
                 ],
               ),
             ),
-            SizedBox(
-              height: 250,
-              width: double.infinity,
-              child: Image.asset("assets/Map/ascent.jpg", fit: BoxFit.fill),
+            Column(
+              children: [SizedBox(child: Image.asset("assets/Map/ascent.jpg"))],
             ),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.black,
-                border: Border.all(color: Colors.white10),
-              ),
-              child: Column(
-                children: [
-                  SizedBox(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text("My Team", style: TextStyle(color: Colors.white)),
-                        Icon(Icons.bar_chart, color: Colors.white),
-                        Icon(Icons.face, color: Colors.white),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+
+            Row(
+              children: [
+                Expanded(
+                  flex: 5,
+                  child: Text("My Team", style: TextStyle(color: Colors.white)),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Icon(Icons.bar_chart, color: Colors.white),
+                ),
+                Expanded(flex: 3, child: Icon(Icons.face, color: Colors.white)),
+              ],
             ),
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.black,
-                border: Border.all(color: Colors.white10),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Card(
-                    color: Colors.black12,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadiusGeometry.zero,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        CircleAvatar(
-                          backgroundImage: AssetImage(
-                            "assets/Agents/brimstone.webp",
+
+            Card(
+              shape: Border.all(color: Colors.white),
+              color: Colors.black,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundImage: AssetImage(
+                              "assets/Agents/brimstone.webp",
+                            ),
                           ),
-                        ),
-                        Text("Brmstone", style: TextStyle(color: Colors.white)),
-                        Text("261", style: TextStyle(color: Colors.white)),
-                        Text("23/21/6", style: TextStyle(color: Colors.white)),
-                        DropdownButton(
-                          items: List.empty(),
-                          onChanged: (value) {},
-                          hint: Text(
-                            "Details",
+                          SizedBox(width: 10, height: 10),
+                          Text(
+                            "brimstone",
                             style: TextStyle(color: Colors.white),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+
+                    Expanded(flex: 2, child: Center(child: Text("261"))),
+
+                    Expanded(
+                      flex: 3,
+                      child: Column(
+                        children: [
+                          Text("23/21/6"),
+                          DropdownButton(
+                            items: List.empty(),
+                            onChanged: (value) {},
+                            hint: Text("details"),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
