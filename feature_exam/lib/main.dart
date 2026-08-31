@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'widgets/profiles.dart';
+import 'data/player.dart';
+import 'data/player_model.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,7 +16,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: const Color.fromARGB(126, 0, 0, 0)),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color.fromARGB(255, 0, 0, 0),
+        ),
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -22,16 +27,6 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -40,22 +35,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   @override
-  String p1 = "brimstone";
-  String p2 = "Chamber";
-  String p3 = "Clove";
-  String p4 = "Cyper";
-  String p5 = "Phoenix";
-  String p6 = "Raze";
-  String p7 = "Reyna";
-  String p8 = "Sova";
-
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       backgroundColor: Colors.black12,
       appBar: AppBar(
@@ -74,7 +54,6 @@ class _MyHomePageState extends State<MyHomePage> {
             Container(
               width: double.infinity,
               height: 50,
-              // color: Colors.black12,
               decoration: BoxDecoration(
                 color: Colors.black12,
                 border: Border.all(color: Colors.white),
@@ -94,7 +73,6 @@ class _MyHomePageState extends State<MyHomePage> {
               children: [SizedBox(child: Image.asset("assets/Map/ascent.jpg"))],
             ),
 
-            //Header MY TEAM
             Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.white),
@@ -119,237 +97,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             ),
-
-            //FOR BRIMSTONE
-            Card(
-              margin: EdgeInsets.zero,
-              shape: Border.all(color: Colors.white),
-              color: Colors.black,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 5,
-                      child: Row(
-                        children: [
-                          CircleAvatar(
-                            backgroundImage: AssetImage(
-                              "assets/Agents/brimstone.webp",
-                            ),
-                          ),
-                          SizedBox(width: 10, height: 10),
-                          Text(
-                            "brimstone",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(flex: 2, child: Center(child: Text("261"))),
-                    Expanded(
-                      flex: 3,
-                      child: Column(
-                        children: [
-                          Text("23/21/6"),
-                          DropdownButton(
-                            items: List.empty(),
-                            onChanged: (value) {},
-                            hint: Text("details"),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: players.length,
+              itemBuilder: (context, index) {
+                return ProfileCard(player: players[index]);
+              },
             ),
-
-            //FOR cypher
-            Card(
-              margin: EdgeInsets.zero,
-              shape: Border.all(color: Colors.white),
-              color: Colors.black,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 5,
-                      child: Row(
-                        children: [
-                          CircleAvatar(
-                            backgroundImage: AssetImage(
-                              "assets/Agents/cypher.webp",
-                            ),
-                          ),
-                          SizedBox(width: 10, height: 10),
-                          Text("cypher", style: TextStyle(color: Colors.white)),
-                        ],
-                      ),
-                    ),
-                    Expanded(flex: 2, child: Center(child: Text("190"))),
-                    Expanded(
-                      flex: 3,
-                      child: Column(
-                        children: [
-                          Text("17/21/8"),
-                          DropdownButton(
-                            items: List.empty(),
-                            onChanged: (value) {},
-                            hint: Text("details"),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            //FOR phoenix
-            Card(
-              margin: EdgeInsets.zero,
-              shape: Border.all(color: Colors.white),
-              color: Colors.black,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 5,
-                      child: Row(
-                        children: [
-                          CircleAvatar(
-                            backgroundImage: AssetImage(
-                              "assets/Agents/phoenix.webp",
-                            ),
-                          ),
-                          SizedBox(width: 10, height: 10),
-                          Text(
-                            "phoenix",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(flex: 2, child: Center(child: Text("89"))),
-                    Expanded(
-                      flex: 3,
-                      child: Column(
-                        children: [
-                          Text("9/8/1"),
-                          DropdownButton(
-                            items: List.empty(),
-                            onChanged: (value) {},
-                            hint: Text("details"),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            //For reyna
-            Card(
-              margin: EdgeInsets.zero,
-              shape: Border.all(color: Colors.white),
-              color: Colors.black,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 5,
-                      child: Row(
-                        children: [
-                          CircleAvatar(
-                            backgroundImage: AssetImage(
-                              "assets/Agents/reyna.webp",
-                            ),
-                          ),
-                          SizedBox(width: 10, height: 10),
-                          Text(
-                            "phoenix",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(flex: 2, child: Center(child: Text("298"))),
-                    Expanded(
-                      flex: 3,
-                      child: Column(
-                        children: [
-                          Text("28/23/6"),
-                          DropdownButton(
-                            items: List.empty(),
-                            onChanged: (value) {},
-                            hint: Text("details"),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            //For raze
-            Card(
-              margin: EdgeInsets.zero,
-              shape: Border.all(color: Colors.white),
-              color: Colors.black,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 5,
-                      child: Row(
-                        children: [
-                          CircleAvatar(
-                            backgroundImage: AssetImage(
-                              "assets/Agents/raze.webp",
-                            ),
-                          ),
-                          SizedBox(width: 10, height: 10),
-                          Text(
-                            "phoenix",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(flex: 2, child: Center(child: Text("259"))),
-                    Expanded(
-                      flex: 3,
-                      child: Column(
-                        children: [
-                          Text("21/21/10"),
-                          DropdownButton(
-                            items: List.empty(),
-                            onChanged: (value) {},
-                            hint: Text("details"),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            //Header
             Container(
-              margin: EdgeInsets.zero,
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.white),
               ),
@@ -358,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Expanded(
                     flex: 5,
                     child: Text(
-                      "Opponent",
+                      "Opponents",
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
@@ -371,232 +127,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Icon(Icons.face, color: Colors.white),
                   ),
                 ],
-              ),
-            ),
-            //FOR BRIMSTONE
-            Card(
-              margin: EdgeInsets.zero,
-              shape: Border.all(color: Colors.white),
-              color: Colors.black,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 5,
-                      child: Row(
-                        children: [
-                          CircleAvatar(
-                            backgroundImage: AssetImage(
-                              "assets/Agents/brimstone.webp",
-                            ),
-                          ),
-                          SizedBox(width: 10, height: 10),
-                          Text(
-                            "brimstone",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(flex: 2, child: Center(child: Text("261"))),
-                    Expanded(
-                      flex: 3,
-                      child: Column(
-                        children: [
-                          Text("23/21/6"),
-                          DropdownButton(
-                            items: List.empty(),
-                            onChanged: (value) {},
-                            hint: Text("details"),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            //FOR cypher
-            Card(
-              margin: EdgeInsets.zero,
-              shape: Border.all(color: Colors.white),
-              color: Colors.black,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 5,
-                      child: Row(
-                        children: [
-                          CircleAvatar(
-                            backgroundImage: AssetImage(
-                              "assets/Agents/cypher.webp",
-                            ),
-                          ),
-                          SizedBox(width: 10, height: 10),
-                          Text("cypher", style: TextStyle(color: Colors.white)),
-                        ],
-                      ),
-                    ),
-                    Expanded(flex: 2, child: Center(child: Text("190"))),
-                    Expanded(
-                      flex: 3,
-                      child: Column(
-                        children: [
-                          Text("17/21/8"),
-                          DropdownButton(
-                            items: List.empty(),
-                            onChanged: (value) {},
-                            hint: Text("details"),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            //FOR phoenix
-            Card(
-              margin: EdgeInsets.zero,
-              shape: Border.all(color: Colors.white),
-              color: Colors.black,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 5,
-                      child: Row(
-                        children: [
-                          CircleAvatar(
-                            backgroundImage: AssetImage(
-                              "assets/Agents/phoenix.webp",
-                            ),
-                          ),
-                          SizedBox(width: 10, height: 10),
-                          Text(
-                            "phoenix",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(flex: 2, child: Center(child: Text("89"))),
-                    Expanded(
-                      flex: 3,
-                      child: Column(
-                        children: [
-                          Text("9/8/1"),
-                          DropdownButton(
-                            items: List.empty(),
-                            onChanged: (value) {},
-                            hint: Text("details"),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            //For reyna
-            Card(
-              margin: EdgeInsets.zero,
-              shape: Border.all(color: Colors.white),
-              color: Colors.black,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 5,
-                      child: Row(
-                        children: [
-                          CircleAvatar(
-                            backgroundImage: AssetImage(
-                              "assets/Agents/reyna.webp",
-                            ),
-                          ),
-                          SizedBox(width: 10, height: 10),
-                          Text(
-                            "phoenix",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(flex: 2, child: Center(child: Text("298"))),
-                    Expanded(
-                      flex: 3,
-                      child: Column(
-                        children: [
-                          Text("28/23/6"),
-                          DropdownButton(
-                            items: List.empty(),
-                            onChanged: (value) {},
-                            hint: Text("details"),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            //For raze
-            Card(
-              margin: EdgeInsets.zero,
-              shape: Border.all(color: Colors.white),
-              color: Colors.black,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 5,
-                      child: Row(
-                        children: [
-                          CircleAvatar(
-                            backgroundImage: AssetImage(
-                              "assets/Agents/raze.webp",
-                            ),
-                          ),
-                          SizedBox(width: 10, height: 10),
-                          Text(
-                            "phoenix",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(flex: 2, child: Center(child: Text("259"))),
-                    Expanded(
-                      flex: 3,
-                      child: Column(
-                        children: [
-                          Text("21/21/10"),
-                          DropdownButton(
-                            items: List.empty(),
-                            onChanged: (value) {},
-                            hint: Text("details"),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
               ),
             ),
           ],
