@@ -1,6 +1,6 @@
 import 'player_model.dart';
 
-final List<Player> players = [
+final List<Player> myTeam = [
   Player(
     name: "scyn4pse",
     stat: 261,
@@ -36,5 +36,38 @@ final List<Player> players = [
     stat: 219,
     standing: "yawa",
     imagePath: "assets/Agents/clove.webp",
+  ),
+];
+
+List<Player> opponents = [
+  Player(
+    name: "tibvay",
+    stat: 219,
+    standing: "20/18/5",
+    imagePath: "assets/Agents/sova.webp",
+  ),
+  Player(
+    name: "Kreiz",
+    stat: 191,
+    standing: "18/21/2",
+    imagePath: "assets/Agents/reyna.webp",
+  ),
+  Player(
+    name: "TransHoang17",
+    stat: 203,
+    standing: "19/19/4",
+    imagePath: "assets/Agents/raze.webp",
+  ),
+  Player(
+    name: "Neithl",
+    stat: 246,
+    standing: "23/21/5",
+    imagePath: "assets/Agents/cypher.webp",
+  ),
+  Player(
+    name: "clutch bus cuk",
+    stat: 159,
+    standing: "13/19/9",
+    imagePath: "assets/Agents/cypher.webp",
   ),
 ];

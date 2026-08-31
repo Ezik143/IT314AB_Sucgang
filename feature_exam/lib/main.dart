@@ -100,9 +100,9 @@ class _MyHomePageState extends State<MyHomePage> {
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: players.length,
+              itemCount: myTeam.length,
               itemBuilder: (context, index) {
-                return ProfileCard(player: players[index]);
+                return ProfileCard(player: myTeam[index]);
               },
             ),
             Container(
@@ -128,6 +128,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ],
               ),
+            ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: opponents.length,
+              itemBuilder: (context, index) {
+                return ProfileCard(player: opponents[index]);
+              },
             ),
           ],
         ),

@@ -28,16 +28,27 @@ class ProfileCard extends StatelessWidget {
                 ],
               ),
             ),
-            Expanded(flex: 2, child: Center(child: Text('${player.stat}'))),
+            Expanded(
+              flex: 2,
+              child: Center(
+                child: Text(
+                  '${player.stat}',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
             Expanded(
               flex: 3,
               child: Column(
                 children: [
-                  Text(player.standing!),
+                  Text(player.standing!, style: TextStyle(color: Colors.white)),
                   DropdownButton(
                     items: const [],
                     onChanged: (value) {},
-                    hint: const Text('details'),
+                    hint: const Text(
+                      'details',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ],
               ),
