@@ -37,6 +37,7 @@ class Anotherwidget extends StatelessWidget {
                             Text("Unknown User")
                           else
                             Text(players.name),
+
                           Row(
                             children: [
                               SizedBox(height: 20, width: 20),
