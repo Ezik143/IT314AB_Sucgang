@@ -28,35 +28,36 @@ jobs:
 
       - name: Prepare SSH Key
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.LIGHTSAIL_SSH_KEY_B64 }}" | base64 -d > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
+          mkdir -p /home/runner/.ssh
+          echo "${{ secrets.LIGHTSAIL_SSH_KEY_B64 }}" | base64 -d > /home/runner/.ssh/deploy_key
+          chmod 600 /home/runner/.ssh/deploy_key
 
       - name: Copy build files to server via SCP
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.LIGHTSAIL_HOST }}
           username: ${{ secrets.LIGHTSAIL_USER }}
-          key_path: ~/.ssh/deploy_key
+          key_path: /home/runner/.ssh/deploy_key
           port: ${{ secrets.LIGHTSAIL_PORT }}
           source: "multi_screen_navigation/build/web/"
           target: "/tmp/flutter_deploy"
           overwrite: true
+          rm: false
 
       - name: Move files, set permissions, and reload Nginx
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.LIGHTSAIL_HOST }}
           username: ${{ secrets.LIGHTSAIL_USER }}
-          key_path: ~/.ssh/deploy_key
+          key_path: /home/runner/.ssh/deploy_key
           port: ${{ secrets.LIGHTSAIL_PORT }}
           script_stop: true
           script: |
             set -euo pipefail
-            sudo rm -rf /var/www/sucgang_app/build/web
-            sudo mkdir -p /var/www/sucgang_app/build
-            sudo mv /tmp/flutter_deploy/web /var/www/sucgang_app/build/web
-            sudo chown -R deploy:www-data /var/www/sucgang_app
-            sudo find /var/www/sucgang_app -type d -exec chmod 755 {} \;
-            sudo find /var/www/sucgang_app -type f -exec chmod 644 {} \;
-            sudo systemctl reload nginx
+            # deploy user owns /var/www/sucgang_app, so no sudo needed for file moves
+            rm -rf /var/www/sucgang_app/build/web
+            mkdir -p /var/www/sucgang_app/build
+            mv /tmp/flutter_deploy/web /var/www/sucgang_app/build/web
+            
+            # sudo is used for permissions and service reload
+            sudo chown -R deploy:www-data /var
