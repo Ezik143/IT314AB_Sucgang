@@ -1,27 +1,63 @@
-name: Deploy to AWS Lightsail
+name: Deploy Flutter Web to AWS Lightsail
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./multi_screen_navigation
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Execute Remote SSH Commands on Lightsail
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Flutter Web
+        run: flutter build web --release
+
+      - name: Decode SSH Key for Deployment
+        id: decode_key
+        run: |
+          DECODED_KEY=$(echo "${{ secrets.LIGHTSAIL_SSH_KEY_B64 }}" | base64 -d)
+          echo "DECODED_KEY<<EOF" >> $GITHUB_ENV
+          echo "$DECODED_KEY" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Copy build files to server via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: ${{ secrets.LIGHTSAIL_USER }}
+          key: ${{ env.DECODED_KEY }}
+          port: ${{ secrets.LIGHTSAIL_PORT }}
+          source: "multi_screen_navigation/build/web/*"
+          target: "/var/www/sucgang_app/build/web"
+          overwrite: true
+
+      - name: Set Permissions and Reload Nginx
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.LIGHTSAIL_HOST }}
           username: ${{ secrets.LIGHTSAIL_USER }}
-          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          key: ${{ env.DECODED_KEY }}
           port: ${{ secrets.LIGHTSAIL_PORT }}
           script_stop: true
           script: |
             set -euo pipefail
-            cd /var/www/html/myapp
-            git fetch origin main
-            git reset --hard origin/main
+            # Fix ownership and permissions (Handout Section 3)
+            sudo chown -R www-data:www-data /var/www/sucgang_app
+            sudo find /var/www/sucgang_app -type d -exec chmod 755 {} \;
+            sudo find /var/www/sucgang_app -type f -exec chmod 644 {} \;
+            # Graceful reload (Handout Section 4)
             sudo systemctl reload nginx
