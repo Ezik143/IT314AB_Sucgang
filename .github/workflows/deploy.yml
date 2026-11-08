@@ -26,12 +26,18 @@ jobs:
       - name: Build Flutter Web
         run: flutter build web --release
 
+      - name: Prepare SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.LIGHTSAIL_SSH_KEY_B64 }}" | base64 -d > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
       - name: Copy build files to server via SCP
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.LIGHTSAIL_HOST }}
           username: ${{ secrets.LIGHTSAIL_USER }}
-          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          key_path: ~/.ssh/deploy_key
           port: ${{ secrets.LIGHTSAIL_PORT }}
           source: "multi_screen_navigation/build/web/"
           target: "/tmp/flutter_deploy"
@@ -42,22 +48,15 @@ jobs:
         with:
           host: ${{ secrets.LIGHTSAIL_HOST }}
           username: ${{ secrets.LIGHTSAIL_USER }}
-          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          key_path: ~/.ssh/deploy_key
           port: ${{ secrets.LIGHTSAIL_PORT }}
           script_stop: true
           script: |
-            # Handout Section 6: Guarantee immediate termination on errors
             set -euo pipefail
-            
-            # Clear old build and move new build into place
             sudo rm -rf /var/www/sucgang_app/build/web
             sudo mkdir -p /var/www/sucgang_app/build
             sudo mv /tmp/flutter_deploy/web /var/www/sucgang_app/build/web
-            
-            # Handout Section 3: Correct standard web directory permissions (Never use 777)
             sudo chown -R deploy:www-data /var/www/sucgang_app
             sudo find /var/www/sucgang_app -type d -exec chmod 755 {} \;
             sudo find /var/www/sucgang_app -type f -exec chmod 644 {} \;
-            
-            # Handout Section 4: Graceful service reload
             sudo systemctl reload nginx
