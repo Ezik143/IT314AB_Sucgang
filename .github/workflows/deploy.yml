@@ -1,52 +1,64 @@
 name: Deploy Flutter Web to AWS Lightsail
 
 on:
-push:
-branches: ["main"]
+  push:
+    branches: ["main"]
 
 jobs:
-build-and-deploy:
-runs-on: ubuntu-latest
-defaults:
-run:
-working-directory: ./multi_screen_navigation
-steps:
-  - name: Checkout repository
-    uses: actions/checkout@v4
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./multi_screen_navigation
 
-  - name: Setup Flutter
-    uses: subosito/flutter-action@v2
-    with:
-      channel: 'stable'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-  - name: Install dependencies
-    run: flutter pub get
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
 
-  - name: Build Flutter Web
-    run: flutter build web --release
+      - name: Install dependencies
+        run: flutter pub get
 
-  - name: Copy build files to server via SCP
-    uses: appleboy/scp-action@v0.1.7
-    with:
-      host: ${{ secrets.LIGHTSAIL_HOST }}
-      username: ${{ secrets.LIGHTSAIL_USER }}
-      key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
-      port: ${{ secrets.LIGHTSAIL_PORT }}
-      source: "multi_screen_navigation/build/web/*"
-      target: "/var/www/sucgang_app/build/web"
-      overwrite: true
+      - name: Build Flutter Web
+        run: flutter build web --release
 
-  - name: Set Permissions and Reload Nginx
-    uses: appleboy/ssh-action@v1.0.3
-    with:
-      host: ${{ secrets.LIGHTSAIL_HOST }}
-      username: ${{ secrets.LIGHTSAIL_USER }}
-      key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
-      port: ${{ secrets.LIGHTSAIL_PORT }}
-      script_stop: true
-      script: |
-        set -euo pipefail
-        sudo chown -R www-data:www-data /var/www/sucgang_app
-        sudo find /var/www/sucgang_app -type d -exec chmod 755 {} \;
-        sudo find /var/www/sucgang_app -type f -exec chmod 644 {} \;
-        sudo systemctl reload nginx
+      - name: Copy build files to server via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: ${{ secrets.LIGHTSAIL_USER }}
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          port: ${{ secrets.LIGHTSAIL_PORT }}
+          source: "multi_screen_navigation/build/web/"
+          target: "/var/www/sucgang_app/build"
+          overwrite: true
+          rm: true
+
+      - name: Set Permissions and Reload Nginx
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: ${{ secrets.LIGHTSAIL_USER }}
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          port: ${{ secrets.LIGHTSAIL_PORT }}
+          script_stop: true
+          script: |
+            set -euo pipefail
+
+            # Flatten folder structure if SCP nested it
+            if [ -d "/var/www/sucgang_app/build/web/build" ]; then
+              sudo mv /var/www/sucgang_app/build/web/build/web/* /var/www/sucgang_app/build/web/
+              sudo rm -rf /var/www/sucgang_app/build/web/build
+            fi
+
+            # Handout Section 3: Correct standard web directory permissions
+            sudo chown -R www-data:www-data /var/www/sucgang_app
+            sudo find /var/www/sucgang_app -type d -exec chmod 755 {} \;
+            sudo find /var/www/sucgang_app -type f -exec chmod 644 {} \;
+
+            # Handout Section 4: Graceful service reload
+            sudo systemctl reload nginx
