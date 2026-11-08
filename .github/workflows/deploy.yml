@@ -34,9 +34,9 @@ jobs:
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
           port: ${{ secrets.LIGHTSAIL_PORT }}
           source: "multi_screen_navigation/build/web/*"
-          target: "/var/www/sucgang_app/build/web"
+          target: "/tmp/flutter_deploy"
           overwrite: true
-          rm: true
+          rm: false
 
       - name: Set Permissions and Reload Nginx
         uses: appleboy/ssh-action@v1.0.3
@@ -48,6 +48,12 @@ jobs:
           script_stop: true
           script: |
             set -euo pipefail
+
+            # Clear old web files and move new files into place safely
+            sudo rm -rf /var/www/sucgang_app/build/web
+            sudo mkdir -p /var/www/sucgang_app/build/web
+            sudo cp -r /tmp/flutter_deploy/* /var/www/sucgang_app/build/web/
+            sudo rm -rf /tmp/flutter_deploy
 
             # Handout Section 3: Correct standard web directory permissions
             sudo chown -R www-data:www-data /var/www/sucgang_app
