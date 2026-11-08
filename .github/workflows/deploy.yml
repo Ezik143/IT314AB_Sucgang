@@ -1,0 +1,63 @@
+name: Deploy Flutter Web to AWS Lightsail
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./multi_screen_navigation
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Flutter Web
+        run: flutter build web --release
+
+      - name: Copy build files to server via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: ${{ secrets.LIGHTSAIL_USER }}
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          port: ${{ secrets.LIGHTSAIL_PORT }}
+          source: "multi_screen_navigation/build/web/"
+          target: "/tmp/flutter_deploy"
+          overwrite: true
+
+      - name: Move files, set permissions, and reload Nginx
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: ${{ secrets.LIGHTSAIL_USER }}
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          port: ${{ secrets.LIGHTSAIL_PORT }}
+          script_stop: true
+          script: |
+            # Handout Section 6: Guarantee immediate termination on errors
+            set -euo pipefail
+            
+            # Clear old build and move new build into place
+            sudo rm -rf /var/www/sucgang_app/build/web
+            sudo mkdir -p /var/www/sucgang_app/build
+            sudo mv /tmp/flutter_deploy/web /var/www/sucgang_app/build/web
+            
+            # Handout Section 3: Correct standard web directory permissions (Never use 777)
+            sudo chown -R deploy:www-data /var/www/sucgang_app
+            sudo find /var/www/sucgang_app -type d -exec chmod 755 {} \;
+            sudo find /var/www/sucgang_app -type f -exec chmod 644 {} \;
+            
+            # Handout Section 4: Graceful service reload
+            sudo systemctl reload nginx
