@@ -26,17 +26,12 @@ jobs:
       - name: Build Flutter Web
         run: flutter build web --release
 
-      - name: Decode SSH Key to Workspace
-        run: |
-          echo "${{ secrets.LIGHTSAIL_SSH_KEY_B64 }}" | base64 -d > /github/workspace/deploy_key
-          chmod 644 /github/workspace/deploy_key
-
       - name: Copy build files to server via SCP
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.LIGHTSAIL_HOST }}
           username: ${{ secrets.LIGHTSAIL_USER }}
-          key_path: /github/workspace/deploy_key
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
           port: ${{ secrets.LIGHTSAIL_PORT }}
           source: "multi_screen_navigation/build/web/*"
           target: "/var/www/sucgang_app/build/web"
@@ -47,7 +42,7 @@ jobs:
         with:
           host: ${{ secrets.LIGHTSAIL_HOST }}
           username: ${{ secrets.LIGHTSAIL_USER }}
-          key_path: /github/workspace/deploy_key
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
           port: ${{ secrets.LIGHTSAIL_PORT }}
           script_stop: true
           script: |
