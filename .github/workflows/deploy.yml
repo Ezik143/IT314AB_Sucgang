@@ -11,12 +11,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Validate deployment secrets
+        run: |
+          if [ -z "${{ secrets.LIGHTSAIL_HOST }}" ] || [ -z "${{ secrets.LIGHTSAIL_USER }}" ] || [ -z "${{ secrets.LIGHTSAIL_PORT }}" ]; then
+            echo "LIGHTSAIL_HOST, LIGHTSAIL_USER, and LIGHTSAIL_PORT secrets are required."
+            exit 1
+          fi
+          if [ -z "${{ secrets.LIGHTSAIL_SSH_KEY }}" ] && [ -z "${{ secrets.LIGHTSAIL_PASSWORD }}" ]; then
+            echo "Provide either LIGHTSAIL_SSH_KEY or LIGHTSAIL_PASSWORD secret for SSH authentication."
+            exit 1
+          fi
+
       - name: Execute Remote SSH Commands on Lightsail
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.LIGHTSAIL_HOST }}
           username: ${{ secrets.LIGHTSAIL_USER }}
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          passphrase: ${{ secrets.LIGHTSAIL_SSH_PASSPHRASE }}
+          password: ${{ secrets.LIGHTSAIL_PASSWORD }}
           port: ${{ secrets.LIGHTSAIL_PORT }}
           script_stop: true
           script: |
