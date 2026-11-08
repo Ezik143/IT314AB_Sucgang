@@ -1,3 +1,4 @@
+@@ -1,41 +1,42 @@
 name: Deploy Flutter Web to AWS Lightsail
 
 on:
@@ -26,38 +27,37 @@ jobs:
       - name: Build Flutter Web
         run: flutter build web --release
 
-      - name: Prepare SSH Key
-        run: |
-          mkdir -p /home/runner/.ssh
-          echo "${{ secrets.LIGHTSAIL_SSH_KEY_B64 }}" | base64 -d > /home/runner/.ssh/deploy_key
-          chmod 600 /home/runner/.ssh/deploy_key
-
       - name: Copy build files to server via SCP
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.LIGHTSAIL_HOST }}
           username: ${{ secrets.LIGHTSAIL_USER }}
-          key_path: /home/runner/.ssh/deploy_key
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
           port: ${{ secrets.LIGHTSAIL_PORT }}
+          source: "multi_screen_navigation/build/web/*"
+          target: "/var/www/sucgang_app/build/web"
           source: "multi_screen_navigation/build/web/"
-          target: "/tmp/flutter_deploy"
+          target: "/var/www/sucgang_app/build"
           overwrite: true
-          rm: false
+          rm: true
 
-      - name: Move files, set permissions, and reload Nginx
+      - name: Set Permissions and Reload Nginx
         uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.LIGHTSAIL_HOST }}
-          username: ${{ secrets.LIGHTSAIL_USER }}
-          key_path: /home/runner/.ssh/deploy_key
-          port: ${{ secrets.LIGHTSAIL_PORT }}
+@@ -47,7 +48,17 @@
           script_stop: true
           script: |
             set -euo pipefail
-            # deploy user owns /var/www/sucgang_app, so no sudo needed for file moves
-            rm -rf /var/www/sucgang_app/build/web
-            mkdir -p /var/www/sucgang_app/build
-            mv /tmp/flutter_deploy/web /var/www/sucgang_app/build/web
-            
-            # sudo is used for permissions and service reload
-            sudo chown -R deploy:www-data /var
+
+            # Flatten folder structure if SCP nested it
+            if [ -d "/var/www/sucgang_app/build/web/build" ]; then
+              sudo mv /var/www/sucgang_app/build/web/build/web/* /var/www/sucgang_app/build/web/
+              sudo rm -rf /var/www/sucgang_app/build/web/build
+            fi
+
+            # Handout Section 3: Correct standard web directory permissions
+            sudo chown -R www-data:www-data /var/www/sucgang_app
+            sudo find /var/www/sucgang_app -type d -exec chmod 755 {} \;
+            sudo find /var/www/sucgang_app -type f -exec chmod 644 {} \;
+
+            # Handout Section 4: Graceful service reload
+            sudo systemctl reload nginx
