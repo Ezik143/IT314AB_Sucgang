@@ -1,62 +1,26 @@
-name: Deploy Flutter Web to AWS Lightsail
-
+name: Deploy to AWS Lightsail
 on:
-  push:
-    branches: ["main"]
-
+push:
+branches: [ "main" ]
 jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./multi_screen_navigation
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Build Flutter Web
-        run: flutter build web --release
-
-      - name: Prepare SSH Key in Workspace
-        run: |
-          mkdir -p ${{ github.workspace }}/.ssh
-          echo "${{ secrets.LIGHTSAIL_SSH_KEY_B64 }}" | base64 -d > ${{ github.workspace }}/.ssh/deploy_key
-          chmod 600 ${{ github.workspace }}/.ssh/deploy_key
-
-      - name: Copy build files to server via SCP
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.LIGHTSAIL_HOST }}
-          username: ${{ secrets.LIGHTSAIL_USER }}
-          key_path: ${{ github.workspace }}/.ssh/deploy_key
-          port: ${{ secrets.LIGHTSAIL_PORT }}
-          source: "multi_screen_navigation/build/web/"
-          target: "/tmp/flutter_deploy"
-          overwrite: true
-
-      - name: Move files, set permissions, and reload Nginx
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.LIGHTSAIL_HOST }}
-          username: ${{ secrets.LIGHTSAIL_USER }}
-          key_path: ${{ github.workspace }}/.ssh/deploy_key
-          port: ${{ secrets.LIGHTSAIL_PORT }}
-          script_stop: true
-          script: |
-            set -euo pipefail
-            sudo rm -rf /var/www/sucgang_app/build/web
-            sudo mkdir -p /var/www/sucgang_app/build
-            sudo mv /tmp/flutter_deploy/web /var/www/sucgang_app/build/web
-            sudo chown -R deploy:www-data /var/www/sucgang_app
-            sudo find /var/www/sucgang_app -type d -exec chmod 755 {} \;
-            sudo find /var/www/sucgang_app -type f -exec chmod 644 {} \;
-            sudo systemctl reload nginx
+deploy:
+runs-on: ubuntu-latest
+steps:
+- name: Checkout repository
+uses: actions/checkout@v4
+- name: Execute Remote SSH Commands on Lightsail
+uses: appleboy/ssh-action@v1.0.3
+with:
+host: ${{ secrets.LIGHTSAIL_HOST }}
+username: ${{ secrets.LIGHTSAIL_USER }}
+key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+port: ${{ secrets.LIGHTSAIL_PORT }}
+script_stop: true
+script: |
+set -euo pipefail
+cd /var/www/html/myapp
+git fetch origin main
+git reset --hard origin/main
+npm install --production || pip install -r requirements.txt
+sudo systemctl restart myapp
+sudo systemctl reload nginx
