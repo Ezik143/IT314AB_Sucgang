@@ -28,16 +28,16 @@ jobs:
 
       - name: Prepare SSH Key
         run: |
-          mkdir -p $HOME/.ssh
-          echo "${{ secrets.LIGHTSAIL_SSH_KEY_B64 }}" | base64 -d > $HOME/.ssh/deploy_key
-          chmod 600 $HOME/.ssh/deploy_key
+          mkdir -p /home/runner/.ssh
+          echo "${{ secrets.LIGHTSAIL_SSH_KEY_B64 }}" | base64 -d > /home/runner/.ssh/deploy_key
+          chmod 600 /home/runner/.ssh/deploy_key
 
       - name: Copy build files to server via SCP
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.LIGHTSAIL_HOST }}
           username: ${{ secrets.LIGHTSAIL_USER }}
-          key_path: $HOME/.ssh/deploy_key
+          key_path: /home/runner/.ssh/deploy_key
           port: ${{ secrets.LIGHTSAIL_PORT }}
           source: "multi_screen_navigation/build/web/"
           target: "/tmp/flutter_deploy"
@@ -48,7 +48,7 @@ jobs:
         with:
           host: ${{ secrets.LIGHTSAIL_HOST }}
           username: ${{ secrets.LIGHTSAIL_USER }}
-          key_path: $HOME/.ssh/deploy_key
+          key_path: /home/runner/.ssh/deploy_key
           port: ${{ secrets.LIGHTSAIL_PORT }}
           script_stop: true
           script: |
