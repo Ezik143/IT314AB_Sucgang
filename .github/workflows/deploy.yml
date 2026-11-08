@@ -26,23 +26,43 @@ jobs:
       - name: Build Flutter Web
         run: flutter build web --release
 
+      - name: Check deployment secrets
+        id: deployment-secrets
+        env:
+          LIGHTSAIL_HOST: ${{ secrets.LIGHTSAIL_HOST }}
+          LIGHTSAIL_USER: ${{ secrets.LIGHTSAIL_USER }}
+          LIGHTSAIL_PORT: ${{ secrets.LIGHTSAIL_PORT }}
+          LIGHTSAIL_SSH_KEY: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          LIGHTSAIL_PASSWORD: ${{ secrets.LIGHTSAIL_PASSWORD }}
+        run: |
+          if [[ -n "$LIGHTSAIL_HOST" && -n "$LIGHTSAIL_USER" && -n "$LIGHTSAIL_PORT" && ( -n "$LIGHTSAIL_SSH_KEY" || -n "$LIGHTSAIL_PASSWORD" ) ]]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::Skipping deployment because required Lightsail secrets are missing. Set LIGHTSAIL_HOST, LIGHTSAIL_USER, LIGHTSAIL_PORT, and either LIGHTSAIL_SSH_KEY or LIGHTSAIL_PASSWORD."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Copy build files to server via SCP
+        if: steps.deployment-secrets.outputs.ready == 'true'
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.LIGHTSAIL_HOST }}
           username: ${{ secrets.LIGHTSAIL_USER }}
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          password: ${{ secrets.LIGHTSAIL_PASSWORD }}
           port: ${{ secrets.LIGHTSAIL_PORT }}
           source: "multi_screen_navigation/build/web/"
           target: "/tmp/flutter_deploy"
           overwrite: true
 
       - name: Move files, set permissions, and reload Nginx
+        if: steps.deployment-secrets.outputs.ready == 'true'
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.LIGHTSAIL_HOST }}
           username: ${{ secrets.LIGHTSAIL_USER }}
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          password: ${{ secrets.LIGHTSAIL_PASSWORD }}
           port: ${{ secrets.LIGHTSAIL_PORT }}
           script_stop: true
           script: |
