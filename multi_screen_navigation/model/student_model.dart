@@ -1,0 +1,17 @@
+class Student {
+  final String studentId;
+  final String name;
+  final int yearLevel;
+  final String course;
+  final String hobby;
+  final String favoriteSubject;
+
+  Student({
+    required this.studentId,
+    required this.name,
+    required this.yearLevel,
+    required this.course,
+    required this.hobby,
+    required this.favoriteSubject,
+  });
+}
