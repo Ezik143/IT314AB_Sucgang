@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:multi_screen_navigation/widgets/add_student_p.dart';
-import 'package:multi_screen_navigation/widgets/student_data.dart';
-import 'package:multi_screen_navigation/widgets/student_list_screen_w.dart';
-import 'package:multi_screen_navigation/widgets/student_model.dart';
-import 'package:multi_screen_navigation/widgets/student_page.dart';
+import 'package:multi_screen_navigation/student/student.dart';
+import 'package:multi_screen_navigation/student/student_data.dart';
+import 'package:multi_screen_navigation/widgets/add_student_page.dart';
+import 'package:multi_screen_navigation/widgets/student_details_page.dart';
+import 'package:multi_screen_navigation/widgets/student_list_item.dart';
 
 void main() {
   runApp(MainApp(student: students.first));
@@ -18,9 +18,9 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       initialRoute: "/",
       routes: {
-        "/studentList": (context) => StudentListScreenW(student: student),
-        "/student-details": (context) => StudentPage(student: student),
-        "/add-student": (context) => AddStudentP(),
+        "/studentList": (context) => StudentListItem(student: student),
+        "/student-details": (context) => StudentDetailsPage(student: student),
+        "/add-student": (context) => AddStudentPage(),
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
@@ -48,7 +48,7 @@ class MainApp extends StatelessWidget {
                       itemCount: students.length,
                       itemBuilder: (context, index) {
                         final student = students[index];
-                        return StudentListScreenW(student: student);
+                        return StudentListItem(student: student);
                       },
                     ),
                   ),

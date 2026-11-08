@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:multi_screen_navigation/widgets/student_model.dart';
+import 'package:multi_screen_navigation/student/student.dart';
 
-class StudentPage extends StatelessWidget {
+class StudentDetailsPage extends StatelessWidget {
   final Student student;
-  const StudentPage({super.key, required this.student});
+  const StudentDetailsPage({super.key, required this.student});
 
   @override
   Widget build(BuildContext context) {

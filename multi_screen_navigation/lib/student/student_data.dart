@@ -1,4 +1,4 @@
-import 'package:multi_screen_navigation/widgets/student_model.dart';
+import 'package:multi_screen_navigation/student/student.dart';
 
 final List<Student> students = [
   Student(
