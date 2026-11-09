@@ -37,6 +37,7 @@ jobs:
           target: "/tmp/flutter_deploy"
           overwrite: true
           rm: false
+          strip_components: 3
 
       - name: Set Permissions and Reload Nginx
         uses: appleboy/ssh-action@v1.0.3
