@@ -3,7 +3,7 @@ import 'package:multi_screen_navigation/student/student.dart';
 final List<Student> students = [
   Student(
     studentId: 'IT-2023-001',
-    name: 'kulafu man',
+    name: 'LOL TEST',
     yearLevel: 3,
     course: 'BS Information Technology',
     hobby: 'Playing basketball',
