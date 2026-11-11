@@ -29,6 +29,11 @@ class StudentDetailsPage extends StatelessWidget {
                 ),
                 SizedBox(height: 20),
                 Text(
+                  'email: ${student.email}',
+                  style: TextStyle(color: Colors.white),
+                ),
+                SizedBox(height: 20),
+                Text(
                   'year level: ${student.yearLevel}',
                   style: TextStyle(color: Colors.white),
                 ),

@@ -10,7 +10,7 @@ class _AddStudentPageState extends State<AddStudentPage> {
   final TextEditingController _studentId = TextEditingController();
   final TextEditingController _fullName = TextEditingController();
   final TextEditingController _course = TextEditingController();
-  final TextEditingController _yearLevel = TextEditingController();
+  int? _yearLevel;
   final TextEditingController _emailAddress = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
@@ -33,6 +33,12 @@ class _AddStudentPageState extends State<AddStudentPage> {
                       hintText: 'Student ID',
                       border: OutlineInputBorder(),
                     ),
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Please enter a student ID';
+                      }
+                      return null;
+                    },
                   ),
                   TextFormField(
                     controller: _fullName,
@@ -41,6 +47,12 @@ class _AddStudentPageState extends State<AddStudentPage> {
                       hintText: 'Full Name',
                       border: OutlineInputBorder(),
                     ),
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Please enter the student\'s full name';
+                      }
+                      return null;
+                    },
                   ),
                   TextFormField(
                     controller: _course,
@@ -49,14 +61,36 @@ class _AddStudentPageState extends State<AddStudentPage> {
                       hintText: 'Course',
                       border: OutlineInputBorder(),
                     ),
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Please enter the student\'s course';
+                      }
+                      return null;
+                    },
                   ),
-                  TextFormField(
-                    controller: _yearLevel,
-                    decoration: InputDecoration(
+                  DropdownButtonFormField<int>(
+                    initialValue: _yearLevel,
+                    decoration: const InputDecoration(
                       labelText: 'Year Level',
-                      hintText: 'Year Level',
                       border: OutlineInputBorder(),
                     ),
+                    items: List.generate(
+                      4,
+                      (index) => DropdownMenuItem<int>(
+                        value: index + 1,
+                        child: Text('Year ${index + 1}'),
+                      ),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        _yearLevel = value;
+                      });
+                    },
+                    validator: (value) {
+                      return value == null
+                          ? 'Please select a year level'
+                          : null;
+                    },
                   ),
                   TextFormField(
                     controller: _emailAddress,
@@ -65,6 +99,18 @@ class _AddStudentPageState extends State<AddStudentPage> {
                       hintText: 'Email Address',
                       border: OutlineInputBorder(),
                     ),
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      final email = value?.trim() ?? '';
+                      if (email.isEmpty) {
+                        return 'Please enter an email address';
+                      }
+                      if (!RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
+                          .hasMatch(email)) {
+                        return 'Please enter a valid email address';
+                      }
+                      return null;
+                    },
                   ),
                   ElevatedButton(
                     onPressed: () {

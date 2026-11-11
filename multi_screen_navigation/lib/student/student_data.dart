@@ -4,6 +4,7 @@ final List<Student> students = [
   Student(
     studentId: 'IT-2023-001',
     name: 'kulafu man',
+    email: 'kulafu.man@example.com',
     yearLevel: 3,
     course: 'BS Information Technology',
     hobby: 'Playing basketball',
@@ -13,6 +14,7 @@ final List<Student> students = [
   Student(
     studentId: 'IT-2023-002',
     name: 'whiskey',
+    email: 'whiskey@example.com',
     yearLevel: 3,
     course: 'BS Information Technology',
     hobby: 'Reading novels',
@@ -22,6 +24,7 @@ final List<Student> students = [
   Student(
     studentId: 'IT-2023-003',
     name: 'siomai',
+    email: 'siomai@example.com',
     yearLevel: 3,
     course: 'BS Information Technology',
     hobby: 'Playing video games',
@@ -31,6 +34,7 @@ final List<Student> students = [
   Student(
     studentId: 'IT-2023-004',
     name: 'siopao',
+    email: 'siopao@example.com',
     yearLevel: 3,
     course: 'BS Information Technology',
     hobby: 'Digital illustration',
@@ -40,6 +44,7 @@ final List<Student> students = [
   Student(
     studentId: 'IT-2023-005',
     name: 'miguelito icecream',
+    email: 'miguelito.icecream@example.com',
     yearLevel: 3,
     course: 'BS Information Technology',
     hobby: 'Photography',
@@ -49,6 +54,7 @@ final List<Student> students = [
   Student(
     studentId: 'IT-2023-006',
     name: 'roblox gaming',
+    email: 'roblox.gaming@example.com',
     yearLevel: 3,
     course: 'BS Information Technology',
     hobby: 'Baking',
@@ -58,6 +64,7 @@ final List<Student> students = [
   Student(
     studentId: 'IT-2023-007',
     name: 'kaloud nimu tiya',
+    email: 'kaloud.nimu.tiya@example.com',
     yearLevel: 3,
     course: 'BS Information Technology',
     hobby: 'Playing the guitar',
@@ -67,6 +74,7 @@ final List<Student> students = [
   Student(
     studentId: 'IT-2023-008',
     name: 'pizza pie',
+    email: 'pizza.pie@example.com',
     yearLevel: 3,
     course: 'BS Information Technology',
     hobby: 'Watching documentaries',
@@ -76,6 +84,7 @@ final List<Student> students = [
   Student(
     studentId: 'IT-2023-009',
     name: 'siomai rice',
+    email: 'siomai.rice@example.com',
     yearLevel: 3,
     course: 'BS Information Technology',
     hobby: 'Cycling',
@@ -85,6 +94,7 @@ final List<Student> students = [
   Student(
     studentId: 'IT-2023-010',
     name: 'hatdog hans',
+    email: 'hatdog.hans@example.com',
     yearLevel: 3,
     course: 'BS Information Technology',
     hobby: 'Creative writing',
