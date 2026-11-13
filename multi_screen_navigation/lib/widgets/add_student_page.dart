@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:multi_screen_navigation/core/db_connection.dart';
 
 class AddStudentPage extends StatefulWidget {
   const AddStudentPage({super.key});
@@ -14,6 +15,47 @@ class _AddStudentPageState extends State<AddStudentPage> {
   final TextEditingController _emailAddress = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+  bool _isSaving = false;
+
+  @override
+  void dispose() {
+    _studentId.dispose();
+    _fullName.dispose();
+    _course.dispose();
+    _emailAddress.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    setState(() => _isSaving = true);
+    try {
+      await DatabaseService.instance.addStudent(
+        studentId: _studentId.text.trim(),
+        name: _fullName.text.trim(),
+        yearLevel: _yearLevel!,
+        course: _course.text.trim(),
+        email: _emailAddress.text.trim(),
+      );
+      if (mounted) {
+        Navigator.pop(context, true);
+      }
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Unable to save student: $error')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isSaving = false);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -113,10 +155,10 @@ class _AddStudentPageState extends State<AddStudentPage> {
                     },
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      _formKey.currentState!.validate();
-                    },
-                    child: const Text('Submit'),
+                    onPressed: _isSaving ? null : _submit,
+                    child: _isSaving
+                        ? const CircularProgressIndicator()
+                        : const Text('Submit'),
                   ),
                 ],
               ),

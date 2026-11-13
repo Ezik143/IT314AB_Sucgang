@@ -1,63 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:multi_screen_navigation/student/student.dart';
-import 'package:multi_screen_navigation/student/student_data.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:multi_screen_navigation/widgets/add_student_page.dart';
-import 'package:multi_screen_navigation/widgets/student_details_page.dart';
-import 'package:multi_screen_navigation/widgets/student_list_item.dart';
+import 'package:multi_screen_navigation/widgets/student_list_page.dart';
 
-void main() {
-  runApp(MainApp(student: students.first));
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: '.env');
+  runApp(const MyApp());
 }
 
-class MainApp extends StatelessWidget {
-  final Student student;
-  const MainApp({super.key, required this.student});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: "/",
-      routes: {
-        "/studentList": (context) => StudentListItem(student: student),
-        "/student-details": (context) => StudentDetailsPage(student: student),
-        "/add-student": (context) => AddStudentPage(),
-      },
+      title: 'Student Directory',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.teal,
-          brightness: Brightness.dark,
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
+        useMaterial3: true,
       ),
-      home: Builder(
-        builder: (context) {
-          return Scaffold(
-            appBar: AppBar(title: const Text('Student List')),
-            body: Padding(
-              padding: EdgeInsetsGeometry.all(16),
-              child: Column(
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, "/add-student");
-                    },
-                    child: Text("Add students"),
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      padding: const EdgeInsets.all(16),
-                      itemCount: students.length,
-                      itemBuilder: (context, index) {
-                        final student = students[index];
-                        return StudentListItem(student: student);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const StudentListPage(),
+        '/add-student': (context) => const AddStudentPage(),
+      },
     );
   }
 }
