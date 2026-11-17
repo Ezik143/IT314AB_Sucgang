@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:multi_screen_navigation/widgets/add_student_page.dart';
-import 'package:multi_screen_navigation/widgets/student_list_page.dart';
+import 'package:multi_screen_navigation/widgets/main_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,17 +14,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Student Directory',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
-        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.teal,
+          brightness: Brightness.dark,
+        ),
       ),
       initialRoute: '/',
-      routes: {
-        '/': (context) => const StudentListPage(),
-        '/add-student': (context) => const AddStudentPage(),
-      },
+      routes: {'/': (context) => const MainPage()},
     );
   }
 }

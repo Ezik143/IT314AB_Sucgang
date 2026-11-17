@@ -8,6 +8,7 @@ class Student {
   final int yearLevel;
   final String contactNumber;
   final String createdAt;
+  final bool isDeleted;
 
   Student({
     this.studentId,
@@ -19,21 +20,22 @@ class Student {
     required this.yearLevel,
     required this.contactNumber,
     required this.createdAt,
+    this.isDeleted = false,
   });
 
+  //factory constructor niga btch
   factory Student.fromRow(dynamic row) {
     return Student(
-      studentId: row['student_id'] == null
-          ? null
-          : int.tryParse(row['student_id'].toString()),
-      studentNumber: row['student_number']?.toString() ?? '',
-      firstName: row['first_name']?.toString() ?? '',
-      lastName: row['last_name']?.toString() ?? '',
-      email: row['email']?.toString() ?? '',
-      course: row['course']?.toString() ?? '',
-      yearLevel: int.tryParse(row['year_level']?.toString() ?? '0') ?? 0,
-      contactNumber: row['contact_number']?.toString() ?? '',
-      createdAt: row['created_at']?.toString() ?? '',
+      studentId: row['student_id'],
+      studentNumber: row['student_number'],
+      firstName: row['first_name'],
+      lastName: row['last_name'],
+      email: row['email'],
+      course: row['course'],
+      yearLevel: row['year_level'],
+      contactNumber: row['contact_number'],
+      createdAt: row['created_at'].toString(),
+      isDeleted: row['is_deleted'] == true,
     );
   }
 

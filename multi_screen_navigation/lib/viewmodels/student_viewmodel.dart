@@ -5,26 +5,57 @@ import 'package:multi_screen_navigation/repositories/student_repository.dart';
 class StudentViewModel extends ChangeNotifier {
   final StudentRepository _repository = StudentRepository();
 
-  List<Student> _students = [];
-  bool _isLoading = false;
-  String? _errorMessage;
-
-  List<Student> get students => _students;
-  bool get isLoading => _isLoading;
-  String? get errorMessage => _errorMessage;
+  List<Student> students = [];
+  bool isLoading = false;
+  String? errorMessage;
 
   Future<void> loadStudents() async {
-    _isLoading = true;
-    _errorMessage = null;
+    isLoading = true;
     notifyListeners();
 
     try {
-      _students = await _repository.getAllStudents();
+      students = await _repository.getAllStudents();
     } catch (error) {
-      _errorMessage = 'Failed to load students. Check connection.';
-    } finally {
-      _isLoading = false;
+      errorMessage = error.toString();
+    }
+
+    isLoading = false;
+    notifyListeners();
+  }
+
+  Future<bool> addStudent(Student student) async {
+    try {
+      await _repository.addStudent(student);
+      await loadStudents();
+      return true;
+    } catch (error) {
+      errorMessage = error.toString();
       notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> updateStudent(Student student) async {
+    try {
+      await _repository.updateStudent(student);
+      await loadStudents();
+      return true;
+    } catch (error) {
+      errorMessage = error.toString();
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> deleteStudent(int studentId) async {
+    try {
+      await _repository.deleteStudent(studentId);
+      await loadStudents();
+      return true;
+    } catch (error) {
+      errorMessage = error.toString();
+      notifyListeners();
+      return false;
     }
   }
 }
