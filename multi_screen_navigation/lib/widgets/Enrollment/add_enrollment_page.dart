@@ -35,9 +35,7 @@ class _AddEnrollmentPageState extends State<AddEnrollmentPage> {
         .split('.')
         .first,
   );
-  String _status = 'Enrolled';
   bool _isSaving = false;
-
   @override
   void initState() {
     super.initState();
@@ -77,12 +75,18 @@ class _AddEnrollmentPageState extends State<AddEnrollmentPage> {
         subjectId: _subjectId!,
         scheduleId: _scheduleId!,
         enrolledAt: _enrolledAt.text.trim(),
-        status: _status,
+        status: 'Enrolled',
       ),
     );
     if (!mounted) return;
     setState(() => _isSaving = false);
     if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Enrollment saved successfully!'),
+          backgroundColor: Colors.green,
+        ),
+      );
       Navigator.pop(context, true);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -176,18 +180,6 @@ class _AddEnrollmentPageState extends State<AddEnrollmentPage> {
             ),
             const SizedBox(height: 15),
             _textField(_enrolledAt, 'Enrolled At (YYYY-MM-DD HH:mm:ss)'),
-            DropdownButtonFormField<String>(
-              initialValue: _status,
-              decoration: const InputDecoration(
-                labelText: 'Status',
-                border: OutlineInputBorder(),
-              ),
-              items: const [
-                DropdownMenuItem(value: 'Enrolled', child: Text('Enrolled')),
-                DropdownMenuItem(value: 'Dropped', child: Text('Dropped')),
-              ],
-              onChanged: (value) => setState(() => _status = value!),
-            ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _isSaving ? null : _submit,

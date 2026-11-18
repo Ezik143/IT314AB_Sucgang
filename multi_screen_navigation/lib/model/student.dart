@@ -1,3 +1,5 @@
+import '../core/formatting.dart';
+
 class Student {
   final int? studentId;
   final String studentNumber;
@@ -23,7 +25,6 @@ class Student {
     this.isDeleted = false,
   });
 
-  //factory constructor niga btch
   factory Student.fromRow(dynamic row) {
     return Student(
       studentId: row['student_id'],
@@ -33,8 +34,8 @@ class Student {
       email: row['email'],
       course: row['course'],
       yearLevel: row['year_level'],
-      contactNumber: row['contact_number'],
-      createdAt: row['created_at'].toString(),
+      contactNumber: row['contact_number'] ?? '',
+      createdAt: formatDate(row['created_at']),
       isDeleted: row['is_deleted'] == true,
     );
   }

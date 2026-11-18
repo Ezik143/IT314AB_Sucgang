@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:multi_screen_navigation/model/enrollment.dart';
 import 'package:multi_screen_navigation/model/grade.dart';
+import 'package:multi_screen_navigation/viewmodels/enrollment_viewmodel.dart';
 import 'package:multi_screen_navigation/viewmodels/grade_viewmodel.dart';
 
 class AddGradePage extends StatefulWidget {
@@ -13,21 +15,39 @@ class AddGradePage extends StatefulWidget {
 class _AddGradePageState extends State<AddGradePage> {
   final _formKey = GlobalKey<FormState>();
   final _viewModel = GradeViewmodel();
-  final _enrollmentId = TextEditingController();
+  final _enrollmentViewModel = EnrollmentViewModel();
   final _gradeValue = TextEditingController();
   final _remarks = TextEditingController();
   final _dateRecorded = TextEditingController(
     text: DateTime.now().toIso8601String().split('T').first,
   );
+  List<Enrollment> _enrollments = [];
+  int? _enrollmentId;
   bool _isSaving = false;
 
   @override
+  void initState() {
+    super.initState();
+    _loadEnrollments();
+  }
+
+  Future<void> _loadEnrollments() async {
+    await _enrollmentViewModel.loadEnrollments();
+    if (!mounted) return;
+    setState(() {
+      _enrollments = _enrollmentViewModel.enrollments
+          .where((enrollment) => enrollment.status == 'Enrolled')
+          .toList();
+    });
+  }
+
+  @override
   void dispose() {
-    _enrollmentId.dispose();
     _gradeValue.dispose();
     _remarks.dispose();
     _dateRecorded.dispose();
     _viewModel.dispose();
+    _enrollmentViewModel.dispose();
     super.dispose();
   }
 
@@ -36,7 +56,7 @@ class _AddGradePageState extends State<AddGradePage> {
     setState(() => _isSaving = true);
     final success = await _viewModel.addGrade(
       Grade(
-        enrollmentId: int.parse(_enrollmentId.text.trim()),
+        enrollmentId: _enrollmentId!,
         gradeValue: double.parse(_gradeValue.text.trim()),
         remarks: _remarks.text.trim(),
         dateRecorded: _dateRecorded.text.trim(),
@@ -45,6 +65,12 @@ class _AddGradePageState extends State<AddGradePage> {
     if (!mounted) return;
     setState(() => _isSaving = false);
     if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Grade added successfully!'),
+          backgroundColor: Colors.green,
+        ),
+      );
       Navigator.pop(context, true);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -67,8 +93,30 @@ class _AddGradePageState extends State<AddGradePage> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            _field(_enrollmentId, 'Enrollment ID', integer: true),
-            _field(_gradeValue, 'Grade Value', decimal: true),
+            DropdownButtonFormField<int>(
+              initialValue: _enrollmentId,
+              decoration: const InputDecoration(
+                labelText: 'Enrollment',
+                border: OutlineInputBorder(),
+              ),
+              items: _enrollments
+                  .where((enrollment) => enrollment.enrollmentId != null)
+                  .map(
+                    (enrollment) => DropdownMenuItem(
+                      value: enrollment.enrollmentId,
+                      child: Text(
+                        '${enrollment.studentName ?? 'Student'} - '
+                        '${enrollment.subjectCode ?? 'Subject'}',
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  )
+                  .toList(),
+              validator: (value) => value == null ? 'Required' : null,
+              onChanged: (value) => setState(() => _enrollmentId = value),
+            ),
+            const SizedBox(height: 15),
+            _gradeField(),
             _field(_remarks, 'Remarks'),
             _field(_dateRecorded, 'Date Recorded (YYYY-MM-DD)'),
             const SizedBox(height: 20),
@@ -84,33 +132,40 @@ class _AddGradePageState extends State<AddGradePage> {
     );
   }
 
-  Widget _field(
-    TextEditingController controller,
-    String label, {
-    bool integer = false,
-    bool decimal = false,
-  }) {
+  Widget _gradeField() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15),
+      child: TextFormField(
+        controller: _gradeValue,
+        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        decoration: const InputDecoration(
+          labelText: 'Grade Value (1.00 - 5.00)',
+          border: OutlineInputBorder(),
+        ),
+        validator: (value) {
+          if (value == null || value.trim().isEmpty) return 'Required';
+          final parsed = double.tryParse(value.trim());
+          if (parsed == null) return 'Must be a valid number';
+          if (parsed < 1.0 || parsed > 5.0) {
+            return 'Grade must be between 1.00 and 5.00';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Widget _field(TextEditingController controller, String label) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: TextFormField(
         controller: controller,
-        keyboardType: (integer || decimal)
-            ? const TextInputType.numberWithOptions(decimal: true)
-            : TextInputType.text,
         decoration: InputDecoration(
           labelText: label,
           border: const OutlineInputBorder(),
         ),
-        validator: (value) {
-          if (value == null || value.trim().isEmpty) return 'Required';
-          if (integer && int.tryParse(value.trim()) == null) {
-            return 'Must be a valid integer';
-          }
-          if (decimal && double.tryParse(value.trim()) == null) {
-            return 'Must be a valid number';
-          }
-          return null;
-        },
+        validator: (value) =>
+            value == null || value.trim().isEmpty ? 'Required' : null,
       ),
     );
   }

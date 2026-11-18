@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:multi_screen_navigation/viewmodels/subject_viewmodel.dart';
+import 'package:multi_screen_navigation/widgets/Subject/add_subject_page.dart';
 import 'package:multi_screen_navigation/widgets/Subject/subject_details_page.dart';
 
 class SubjectListPage extends StatefulWidget {
@@ -27,7 +28,23 @@ class _SubjectListPageState extends State<SubjectListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Subjects')),
+      appBar: AppBar(
+        title: const Text('Subjects'),
+        backgroundColor: Colors.teal,
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.teal,
+        onPressed: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AddSubjectPage()),
+          );
+          if (result == true && mounted) {
+            await _viewModel.loadSubjects();
+          }
+        },
+        child: const Icon(Icons.add),
+      ),
       body: ListenableBuilder(
         listenable: _viewModel,
         builder: (context, child) {
@@ -77,8 +94,52 @@ class _SubjectListPageState extends State<SubjectListPage> {
                     subtitle: Text(
                       '${subject.subjectCode} - ${subject.units} Units',
                     ),
-                    trailing: Text(
-                      subject.isAvailable ? 'Available' : 'not available',
+                    trailing: IconButton(
+                      tooltip: 'Delete subject',
+                      icon: const Icon(Icons.delete_outline),
+                      onPressed: () async {
+                        final confirm = await showDialog<bool>(
+                          context: context,
+                          builder: (dialogContext) => AlertDialog(
+                            title: const Text('Delete Subject'),
+                            content: const Text(
+                              'Are you sure you want to delete this subject?',
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.pop(dialogContext, false),
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.pop(dialogContext, true),
+                                child: const Text('Delete'),
+                              ),
+                            ],
+                          ),
+                        );
+                        if (!context.mounted) return;
+                        if (confirm != true || subject.subjectId == null) {
+                          return;
+                        }
+                        final messenger = ScaffoldMessenger.of(context);
+                        final success = await _viewModel.deleteSubject(
+                          subject.subjectId!,
+                        );
+                        if (!mounted) return;
+                        messenger.showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              success
+                                  ? 'Subject deleted successfully!'
+                                  : _viewModel.errorMessage ??
+                                        'Unable to delete subject',
+                            ),
+                            backgroundColor: success ? Colors.green : null,
+                          ),
+                        );
+                      },
                     ),
                     onTap: () async {
                       final result = await Navigator.push(

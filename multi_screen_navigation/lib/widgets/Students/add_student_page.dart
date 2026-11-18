@@ -151,6 +151,10 @@ class _AddStudentPageState extends State<AddStudentPage> {
           if (value == null || value.trim().isEmpty) {
             return 'Required';
           }
+          if (isEmail &&
+              !RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(value.trim())) {
+            return 'Enter a valid email address';
+          }
           return null;
         },
       ),

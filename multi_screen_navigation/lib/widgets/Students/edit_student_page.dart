@@ -87,11 +87,16 @@ class _EditStudentPageState extends State<EditStudentPage> {
     }
   }
 
-  Widget _field(TextEditingController controller, String label) {
+  Widget _field(
+    TextEditingController controller,
+    String label, {
+    bool isEmail = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: TextFormField(
         controller: controller,
+        keyboardType: isEmail ? TextInputType.emailAddress : TextInputType.text,
         decoration: InputDecoration(
           labelText: label,
           border: const OutlineInputBorder(),
@@ -99,6 +104,10 @@ class _EditStudentPageState extends State<EditStudentPage> {
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
             return 'Required';
+          }
+          if (isEmail &&
+              !RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(value.trim())) {
+            return 'Enter a valid email address';
           }
           return null;
         },
@@ -121,7 +130,7 @@ class _EditStudentPageState extends State<EditStudentPage> {
             _field(_studentNumber, 'Student Number'),
             _field(_firstName, 'First Name'),
             _field(_lastName, 'Last Name'),
-            _field(_email, 'Email'),
+            _field(_email, 'Email', isEmail: true),
             _field(_course, 'Course'),
             _field(_contact, 'Contact Number'),
 

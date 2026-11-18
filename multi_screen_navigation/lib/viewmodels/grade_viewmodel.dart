@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import 'package:multi_screen_navigation/core/error_message.dart';
 import 'package:multi_screen_navigation/model/grade.dart';
 import 'package:multi_screen_navigation/repositories/grade_repository.dart';
 
@@ -17,7 +18,7 @@ class GradeViewmodel extends ChangeNotifier {
     try {
       grades = await _repository.getAllGrades();
     } catch (error) {
-      errorMessage = error.toString();
+      errorMessage = friendlyError(error);
     } finally {
       isLoading = false;
       notifyListeners();
@@ -30,7 +31,7 @@ class GradeViewmodel extends ChangeNotifier {
       await loadGrades();
       return true;
     } catch (error) {
-      errorMessage = error.toString();
+      errorMessage = friendlyError(error);
       notifyListeners();
       return false;
     }
@@ -42,7 +43,7 @@ class GradeViewmodel extends ChangeNotifier {
       await loadGrades();
       return true;
     } catch (error) {
-      errorMessage = error.toString();
+      errorMessage = friendlyError(error);
       notifyListeners();
       return false;
     }
@@ -54,7 +55,7 @@ class GradeViewmodel extends ChangeNotifier {
       await loadGrades();
       return true;
     } catch (error) {
-      errorMessage = error.toString();
+      errorMessage = friendlyError(error);
       notifyListeners();
       return false;
     }

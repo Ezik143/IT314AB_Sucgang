@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:multi_screen_navigation/model/enrollment.dart';
 import 'package:multi_screen_navigation/model/grade.dart';
+import 'package:multi_screen_navigation/viewmodels/enrollment_viewmodel.dart';
 import 'package:multi_screen_navigation/viewmodels/grade_viewmodel.dart';
 
 class EditGradePage extends StatefulWidget {
@@ -15,32 +17,64 @@ class EditGradePage extends StatefulWidget {
 class _EditGradePageState extends State<EditGradePage> {
   final _formKey = GlobalKey<FormState>();
   final _viewModel = GradeViewmodel();
-  late final TextEditingController _enrollmentId;
+  final _enrollmentViewModel = EnrollmentViewModel();
   late final TextEditingController _gradeValue;
   late final TextEditingController _remarks;
   late final TextEditingController _dateRecorded;
+  List<Enrollment> _enrollments = [];
+  late int _enrollmentId;
   bool _isSaving = false;
 
   @override
   void initState() {
     super.initState();
-    _enrollmentId = TextEditingController(
-      text: widget.grade.enrollmentId.toString(),
-    );
+    _enrollmentId = widget.grade.enrollmentId;
     _gradeValue = TextEditingController(
-      text: widget.grade.gradeValue.toString(),
+      text: widget.grade.gradeValue.toStringAsFixed(2),
     );
     _remarks = TextEditingController(text: widget.grade.remarks);
     _dateRecorded = TextEditingController(text: widget.grade.dateRecorded);
+    _loadEnrollments();
+  }
+
+  Future<void> _loadEnrollments() async {
+    await _enrollmentViewModel.loadEnrollments();
+    if (!mounted) return;
+    setState(() => _enrollments = _enrollmentViewModel.enrollments);
+  }
+
+  List<DropdownMenuItem<int>> _enrollmentItems() {
+    final items = _enrollments
+        .where((enrollment) => enrollment.enrollmentId != null)
+        .map(
+          (enrollment) => DropdownMenuItem(
+            value: enrollment.enrollmentId,
+            child: Text(
+              '${enrollment.studentName ?? 'Student'} - '
+              '${enrollment.subjectCode ?? 'Subject'}',
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        )
+        .toList();
+    if (!items.any((item) => item.value == _enrollmentId)) {
+      items.add(
+        DropdownMenuItem(
+          value: _enrollmentId,
+          child: Text('Enrollment #$_enrollmentId'),
+        ),
+      );
+    }
+    return items;
   }
 
   @override
   void dispose() {
-    _enrollmentId.dispose();
     _gradeValue.dispose();
     _remarks.dispose();
     _dateRecorded.dispose();
     _viewModel.dispose();
+    _enrollmentViewModel.dispose();
     super.dispose();
   }
 
@@ -50,7 +84,7 @@ class _EditGradePageState extends State<EditGradePage> {
     final success = await _viewModel.updateGrade(
       Grade(
         gradeId: widget.grade.gradeId,
-        enrollmentId: int.parse(_enrollmentId.text.trim()),
+        enrollmentId: _enrollmentId,
         gradeValue: double.parse(_gradeValue.text.trim()),
         remarks: _remarks.text.trim(),
         dateRecorded: _dateRecorded.text.trim(),
@@ -59,6 +93,12 @@ class _EditGradePageState extends State<EditGradePage> {
     if (!mounted) return;
     setState(() => _isSaving = false);
     if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Grade updated successfully!'),
+          backgroundColor: Colors.green,
+        ),
+      );
       Navigator.pop(context, true);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -81,8 +121,18 @@ class _EditGradePageState extends State<EditGradePage> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            _field(_enrollmentId, 'Enrollment ID', integer: true),
-            _field(_gradeValue, 'Grade Value', decimal: true),
+            DropdownButtonFormField<int>(
+              initialValue: _enrollmentId,
+              isExpanded: true,
+              decoration: const InputDecoration(
+                labelText: 'Enrollment',
+                border: OutlineInputBorder(),
+              ),
+              items: _enrollmentItems(),
+              onChanged: (value) => setState(() => _enrollmentId = value!),
+            ),
+            const SizedBox(height: 15),
+            _gradeField(),
             _field(_remarks, 'Remarks'),
             _field(_dateRecorded, 'Date Recorded (YYYY-MM-DD)'),
             const SizedBox(height: 20),
@@ -98,33 +148,40 @@ class _EditGradePageState extends State<EditGradePage> {
     );
   }
 
-  Widget _field(
-    TextEditingController controller,
-    String label, {
-    bool integer = false,
-    bool decimal = false,
-  }) {
+  Widget _gradeField() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15),
+      child: TextFormField(
+        controller: _gradeValue,
+        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        decoration: const InputDecoration(
+          labelText: 'Grade Value (1.00 - 5.00)',
+          border: OutlineInputBorder(),
+        ),
+        validator: (value) {
+          if (value == null || value.trim().isEmpty) return 'Required';
+          final parsed = double.tryParse(value.trim());
+          if (parsed == null) return 'Must be a valid number';
+          if (parsed < 1.0 || parsed > 5.0) {
+            return 'Grade must be between 1.00 and 5.00';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Widget _field(TextEditingController controller, String label) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: TextFormField(
         controller: controller,
-        keyboardType: (integer || decimal)
-            ? const TextInputType.numberWithOptions(decimal: true)
-            : TextInputType.text,
         decoration: InputDecoration(
           labelText: label,
           border: const OutlineInputBorder(),
         ),
-        validator: (value) {
-          if (value == null || value.trim().isEmpty) return 'Required';
-          if (integer && int.tryParse(value.trim()) == null) {
-            return 'Must be a valid integer';
-          }
-          if (decimal && double.tryParse(value.trim()) == null) {
-            return 'Must be a valid number';
-          }
-          return null;
-        },
+        validator: (value) =>
+            value == null || value.trim().isEmpty ? 'Required' : null,
       ),
     );
   }

@@ -115,8 +115,9 @@ class _AddSubjectPageState extends State<AddSubjectPage> {
       padding: const EdgeInsets.only(bottom: 15),
       child: TextFormField(
         controller: controller,
-        keyboardType:
-            isInteger ? TextInputType.number : (isEmail ? TextInputType.emailAddress : TextInputType.text),
+        keyboardType: isInteger
+            ? TextInputType.number
+            : (isEmail ? TextInputType.emailAddress : TextInputType.text),
         decoration: InputDecoration(
           labelText: label,
           border: const OutlineInputBorder(),
@@ -129,6 +130,9 @@ class _AddSubjectPageState extends State<AddSubjectPage> {
             final int? parsed = int.tryParse(value.trim());
             if (parsed == null) {
               return 'Must be a valid integer';
+            }
+            if (parsed < 1 || parsed > 12) {
+              return 'Units must be between 1 and 12';
             }
           }
           return null;

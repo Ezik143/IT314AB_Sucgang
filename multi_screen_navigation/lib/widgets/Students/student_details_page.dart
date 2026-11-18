@@ -98,7 +98,7 @@ class _StudentDetailsPageState extends State<StudentDetailsPage> {
         title: const Text('Student Details'),
         backgroundColor: Colors.teal,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -212,12 +212,13 @@ class _StudentDetailsPageState extends State<StudentDetailsPage> {
                           ..._viewModel.grades.map(
                             (grade) => ListTile(
                               contentPadding: EdgeInsets.zero,
-                              title: Text(grade.gradeValue.toStringAsFixed(2)),
-                              subtitle: Text(
+                              title: Text(
                                 '${grade.subjectCode ?? 'Subject'}: '
-                                '${grade.subjectName ?? 'Unknown subject'} - '
-                                'Grade ${grade.gradeValue.toStringAsFixed(0)} '
-                                '(${grade.remarks})',
+                                '${grade.subjectName ?? 'Unknown subject'}',
+                              ),
+                              subtitle: Text(
+                                'Grade ${grade.gradeValue.toStringAsFixed(2)}'
+                                '${grade.remarks.isEmpty ? '' : ' (${grade.remarks})'}',
                               ),
                             ),
                           ),

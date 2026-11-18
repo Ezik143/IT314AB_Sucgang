@@ -1,3 +1,5 @@
+import '../core/formatting.dart';
+
 class Enrollment {
   final int? enrollmentId;
   final int studentId;
@@ -29,7 +31,7 @@ class Enrollment {
       studentId: row['student_id'],
       subjectId: row['subject_id'],
       scheduleId: row['schedule_id'],
-      enrolledAt: row['enrolled_at'].toString(),
+      enrolledAt: formatTimestamp(row['enrolled_at']),
       status: row['status'],
       studentName: row['student_name']?.toString(),
       subjectCode: row['subject_code']?.toString(),

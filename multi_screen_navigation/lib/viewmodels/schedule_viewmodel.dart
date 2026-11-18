@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../core/error_message.dart';
 import '../model/schedule.dart';
 import '../repositories/schedule_repository.dart';
 
@@ -15,10 +16,23 @@ class ScheduleViewModel extends ChangeNotifier {
     errorMessage = null;
     notifyListeners();
     try {
-      await _repository.seedSchedules();
       schedules = await _repository.getAllSchedules();
     } catch (error) {
-      errorMessage = error.toString();
+      errorMessage = friendlyError(error);
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> loadSchedulesForSubject(int subjectId) async {
+    isLoading = true;
+    errorMessage = null;
+    notifyListeners();
+    try {
+      schedules = await _repository.getSchedulesBySubject(subjectId);
+    } catch (error) {
+      errorMessage = friendlyError(error);
     } finally {
       isLoading = false;
       notifyListeners();
@@ -31,7 +45,7 @@ class ScheduleViewModel extends ChangeNotifier {
       await loadSchedules();
       return true;
     } catch (error) {
-      errorMessage = error.toString();
+      errorMessage = friendlyError(error);
       notifyListeners();
       return false;
     }
@@ -43,7 +57,7 @@ class ScheduleViewModel extends ChangeNotifier {
       await loadSchedules();
       return true;
     } catch (error) {
-      errorMessage = error.toString();
+      errorMessage = friendlyError(error);
       notifyListeners();
       return false;
     }
@@ -55,7 +69,7 @@ class ScheduleViewModel extends ChangeNotifier {
       await loadSchedules();
       return true;
     } catch (error) {
-      errorMessage = error.toString();
+      errorMessage = friendlyError(error);
       notifyListeners();
       return false;
     }

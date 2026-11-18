@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:multi_screen_navigation/core/error_message.dart';
 import 'package:multi_screen_navigation/model/subject.dart';
 import 'package:multi_screen_navigation/repositories/subject_repository.dart';
 
@@ -12,11 +12,12 @@ class SubjectViewmodel extends ChangeNotifier {
 
   Future<void> loadSubjects() async {
     isLoading = true;
+    errorMessage = null;
     notifyListeners();
     try {
       subjects = await _repository.getAllSubjects();
     } catch (error) {
-      errorMessage = error.toString();
+      errorMessage = friendlyError(error);
     }
     isLoading = false;
     notifyListeners();
@@ -28,7 +29,7 @@ class SubjectViewmodel extends ChangeNotifier {
       await loadSubjects();
       return true;
     } catch (error) {
-      errorMessage = error.toString();
+      errorMessage = friendlyError(error);
       notifyListeners();
       return false;
     }
@@ -40,7 +41,7 @@ class SubjectViewmodel extends ChangeNotifier {
       await loadSubjects();
       return true;
     } catch (error) {
-      errorMessage = error.toString();
+      errorMessage = friendlyError(error);
       notifyListeners();
       return false;
     }
@@ -52,7 +53,7 @@ class SubjectViewmodel extends ChangeNotifier {
       await loadSubjects();
       return true;
     } catch (error) {
-      errorMessage = error.toString();
+      errorMessage = friendlyError(error);
       notifyListeners();
       return false;
     }

@@ -21,14 +21,13 @@ class Subject {
       subjectCode: row['subject_code'],
       subjectName: row['subject_name'],
       units: row['units'],
-      description: row['description'],
-      isAvailable: row['is_available'],
+      description: (row['description'] ?? '').toString(),
+      isAvailable: row['is_available'] == true,
     );
   }
 
   Map<String, dynamic> toParams() {
     return {
-      'subject_id': subjectId,
       'subject_code': subjectCode,
       'subject_name': subjectName,
       'units': units,

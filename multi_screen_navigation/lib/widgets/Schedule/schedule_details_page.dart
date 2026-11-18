@@ -59,6 +59,12 @@ class ScheduleDetailsPage extends StatelessWidget {
               viewModel.dispose();
               if (!context.mounted) return;
               if (success) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Schedule deleted successfully!'),
+                    backgroundColor: Colors.green,
+                  ),
+                );
                 Navigator.pop(context, true);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(

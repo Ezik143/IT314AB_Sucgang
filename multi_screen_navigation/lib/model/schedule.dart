@@ -1,3 +1,5 @@
+﻿import '../core/formatting.dart';
+
 class Schedule {
   final int? scheduleId;
   final int subjectId;
@@ -26,8 +28,8 @@ class Schedule {
       scheduleId: row['schedule_id'],
       subjectId: row['subject_id'],
       dayOfWeek: row['day_of_week'],
-      startTime: row['start_time'].toString(),
-      endTime: row['end_time'].toString(),
+      startTime: formatClock(row['start_time']),
+      endTime: formatClock(row['end_time']),
       room: row['room'],
       slotCapacity: row['slot_capacity'],
       subjectCode: row['subject_code']?.toString(),

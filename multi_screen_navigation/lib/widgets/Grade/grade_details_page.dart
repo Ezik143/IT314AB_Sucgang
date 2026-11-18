@@ -55,6 +55,12 @@ class GradeDetailsPage extends StatelessWidget {
               viewModel.dispose();
               if (!context.mounted) return;
               if (success) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Grade deleted successfully!'),
+                    backgroundColor: Colors.green,
+                  ),
+                );
                 Navigator.pop(context, true);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -87,7 +93,7 @@ class GradeDetailsPage extends StatelessWidget {
                 const Divider(),
                 _row('Enrollment ID', '#${grade.enrollmentId}'),
                 const Divider(),
-                _row('Grade', grade.gradeValue.toString()),
+                _row('Grade', grade.gradeValue.toStringAsFixed(2)),
                 const Divider(),
                 _row('Remarks', grade.remarks),
                 const Divider(),

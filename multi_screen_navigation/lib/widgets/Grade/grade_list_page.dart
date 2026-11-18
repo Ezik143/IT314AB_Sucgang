@@ -139,14 +139,59 @@ class _GradeListPageState extends State<GradeListPage> {
                   ),
                   child: ListTile(
                     leading: CircleAvatar(
-                      child: Text(grade.gradeValue.toStringAsFixed(0)),
+                      child: Text(grade.gradeValue.toStringAsFixed(2)),
                     ),
                     title: Text(grade.studentName ?? 'Unknown student'),
                     subtitle: Text(
                       '${grade.subjectCode ?? 'Subject'}: '
                       '${grade.subjectName ?? 'Unknown subject'} - '
-                      'Grade ${grade.gradeValue.toStringAsFixed(0)} '
-                      '(${grade.remarks})',
+                      'Grade ${grade.gradeValue.toStringAsFixed(2)}'
+                      '${grade.remarks.isEmpty ? '' : ' (${grade.remarks})'}',
+                    ),
+                    trailing: IconButton(
+                      tooltip: 'Delete grade',
+                      icon: const Icon(Icons.delete_outline),
+                      onPressed: () async {
+                        final confirm = await showDialog<bool>(
+                          context: context,
+                          builder: (dialogContext) => AlertDialog(
+                            title: const Text('Delete Grade'),
+                            content: const Text(
+                              'Are you sure you want to delete this grade?',
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.pop(dialogContext, false),
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.pop(dialogContext, true),
+                                child: const Text('Delete'),
+                              ),
+                            ],
+                          ),
+                        );
+                        if (!context.mounted) return;
+                        if (confirm != true || grade.gradeId == null) return;
+                        final messenger = ScaffoldMessenger.of(context);
+                        final success = await _viewModel.deleteGrade(
+                          grade.gradeId!,
+                        );
+                        if (!mounted) return;
+                        messenger.showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              success
+                                  ? 'Grade deleted successfully!'
+                                  : _viewModel.errorMessage ??
+                                        'Unable to delete grade',
+                            ),
+                            backgroundColor: success ? Colors.green : null,
+                          ),
+                        );
+                      },
                     ),
                     onTap: () async {
                       final result = await Navigator.push<bool>(

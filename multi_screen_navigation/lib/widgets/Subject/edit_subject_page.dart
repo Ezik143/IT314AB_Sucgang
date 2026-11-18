@@ -21,7 +21,6 @@ class _EditSubjectPageState extends State<EditSubjectPage> {
   late TextEditingController _units;
   late TextEditingController _description;
 
-  late int _yearLevel;
   bool _isSaving = false;
 
   @override
@@ -89,7 +88,7 @@ class _EditSubjectPageState extends State<EditSubjectPage> {
           children: [
             _field(_subjectCode, 'Subject Code'),
             _field(_subjectName, 'Subject Name'),
-            _field(_units, 'Units'),
+            _field(_units, 'Units', isInteger: true),
             _field(_description, 'Description'),
             const SizedBox(height: 20),
 
@@ -105,11 +104,16 @@ class _EditSubjectPageState extends State<EditSubjectPage> {
     );
   }
 
-  Widget _field(TextEditingController controller, String label) {
+  Widget _field(
+    TextEditingController controller,
+    String label, {
+    bool isInteger = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: TextFormField(
         controller: controller,
+        keyboardType: isInteger ? TextInputType.number : TextInputType.text,
         decoration: InputDecoration(
           labelText: label,
           border: const OutlineInputBorder(),
@@ -117,6 +121,13 @@ class _EditSubjectPageState extends State<EditSubjectPage> {
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
             return 'Required';
+          }
+          if (isInteger) {
+            final parsed = int.tryParse(value.trim());
+            if (parsed == null) return 'Must be a valid integer';
+            if (parsed < 1 || parsed > 12) {
+              return 'Units must be between 1 and 12';
+            }
           }
           return null;
         },

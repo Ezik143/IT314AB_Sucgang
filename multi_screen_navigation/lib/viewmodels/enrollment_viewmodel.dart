@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../core/error_message.dart';
 import '../model/enrollment.dart';
 import '../repositories/enrollment_repository.dart';
 
@@ -15,10 +16,9 @@ class EnrollmentViewModel extends ChangeNotifier {
     errorMessage = null;
     notifyListeners();
     try {
-      await _repository.seedEnrollments();
       enrollments = await _repository.getAllEnrollments();
     } catch (error) {
-      errorMessage = error.toString();
+      errorMessage = friendlyError(error);
     } finally {
       isLoading = false;
       notifyListeners();
@@ -31,7 +31,7 @@ class EnrollmentViewModel extends ChangeNotifier {
       await loadEnrollments();
       return true;
     } catch (error) {
-      errorMessage = error.toString();
+      errorMessage = friendlyError(error);
       notifyListeners();
       return false;
     }
@@ -43,7 +43,7 @@ class EnrollmentViewModel extends ChangeNotifier {
       await loadEnrollments();
       return true;
     } catch (error) {
-      errorMessage = error.toString();
+      errorMessage = friendlyError(error);
       notifyListeners();
       return false;
     }
@@ -55,7 +55,7 @@ class EnrollmentViewModel extends ChangeNotifier {
       await loadEnrollments();
       return true;
     } catch (error) {
-      errorMessage = error.toString();
+      errorMessage = friendlyError(error);
       notifyListeners();
       return false;
     }

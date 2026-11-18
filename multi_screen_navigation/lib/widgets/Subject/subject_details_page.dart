@@ -1,17 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:multi_screen_navigation/model/schedule.dart';
 import 'package:multi_screen_navigation/model/subject.dart';
+import 'package:multi_screen_navigation/viewmodels/schedule_viewmodel.dart';
 import 'package:multi_screen_navigation/viewmodels/subject_viewmodel.dart';
 import 'package:multi_screen_navigation/widgets/Subject/edit_subject_page.dart';
 
-class SubjectDetailsPage extends StatelessWidget {
+class SubjectDetailsPage extends StatefulWidget {
   final Subject subject;
 
   const SubjectDetailsPage({super.key, required this.subject});
 
   @override
-  Widget build(BuildContext context) {
-    final viewModel = SubjectViewmodel();
+  State<SubjectDetailsPage> createState() => _SubjectDetailsPageState();
+}
 
+class _SubjectDetailsPageState extends State<SubjectDetailsPage> {
+  final SubjectViewmodel _subjectViewModel = SubjectViewmodel();
+  final ScheduleViewModel _scheduleViewModel = ScheduleViewModel();
+
+  @override
+  void initState() {
+    super.initState();
+    final subjectId = widget.subject.subjectId;
+    if (subjectId != null) {
+      _scheduleViewModel.loadSchedulesForSubject(subjectId);
+    }
+  }
+
+  @override
+  void dispose() {
+    _subjectViewModel.dispose();
+    _scheduleViewModel.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final subject = widget.subject;
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -26,7 +51,6 @@ class SubjectDetailsPage extends StatelessWidget {
               );
 
               if (result == true && context.mounted) {
-                viewModel.loadSubjects();
                 Navigator.pop(context, true);
               }
             },
@@ -58,10 +82,8 @@ class SubjectDetailsPage extends StatelessWidget {
               if (confirm != true || !context.mounted) return;
 
               final success = subject.subjectId != null
-                  ? await viewModel.deleteSubject(subject.subjectId!)
+                  ? await _subjectViewModel.deleteSubject(subject.subjectId!)
                   : false;
-
-              viewModel.dispose();
 
               if (!context.mounted) return;
 
@@ -78,7 +100,7 @@ class SubjectDetailsPage extends StatelessWidget {
         title: const Text('Subject Details'),
         backgroundColor: Colors.teal,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -125,15 +147,62 @@ class SubjectDetailsPage extends StatelessWidget {
                       'Availability',
                       subject.isAvailable ? 'Available' : 'Not Available',
                     ),
-                    const Divider(),
-                    _buildDetailRow('Created', subject.description),
                   ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Card(
+              elevation: 2,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: ListenableBuilder(
+                  listenable: _scheduleViewModel,
+                  builder: (context, child) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Schedules',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Divider(),
+                        if (_scheduleViewModel.isLoading)
+                          const Center(child: CircularProgressIndicator())
+                        else if (_scheduleViewModel.errorMessage != null)
+                          Text(
+                            _scheduleViewModel.errorMessage!,
+                            style: const TextStyle(color: Colors.red),
+                          )
+                        else if (_scheduleViewModel.schedules.isEmpty)
+                          const Text('No schedules for this subject')
+                        else
+                          ..._scheduleViewModel.schedules.map(
+                            (schedule) => _buildScheduleTile(schedule),
+                          ),
+                      ],
+                    );
+                  },
                 ),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildScheduleTile(Schedule schedule) {
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      leading: const Icon(Icons.schedule),
+      title: Text(
+        '${schedule.dayOfWeek} ${schedule.startTime} - ${schedule.endTime}',
+      ),
+      subtitle: Text('${schedule.room} - ${schedule.slotCapacity} slots'),
     );
   }
 

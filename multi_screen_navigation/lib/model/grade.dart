@@ -1,3 +1,5 @@
+import '../core/formatting.dart';
+
 class Grade {
   final int? gradeId;
   final int enrollmentId;
@@ -24,8 +26,8 @@ class Grade {
       gradeId: row['grade_id'],
       enrollmentId: row['enrollment_id'],
       gradeValue: double.parse(row['grade_value'].toString()),
-      remarks: row['remarks'],
-      dateRecorded: row['date_recorded'].toString(),
+      remarks: (row['remarks'] ?? '').toString(),
+      dateRecorded: formatDate(row['date_recorded']),
       studentName: row['student_name']?.toString(),
       subjectCode: row['subject_code']?.toString(),
       subjectName: row['subject_name']?.toString(),
