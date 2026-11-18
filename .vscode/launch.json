@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "multi_screen_navigation (debug)",
+      "request": "launch",
+      "type": "dart",
+      "program": "multi_screen_navigation/lib/main.dart",
+      "cwd": "multi_screen_navigation",
+      "toolArgs": ["--dart-define-from-file=dart_defines.json"]
+    }
+  ]
+}

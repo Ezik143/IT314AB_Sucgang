@@ -55,6 +55,15 @@ class _MainPageState extends State<MainPage> {
                           : 'Database connection failed',
                       style: const TextStyle(color: Colors.white),
                     ),
+                    subtitle: connected
+                        ? null
+                        : Text(
+                            DatabaseService.lastError ??
+                                'Check your credentials and network.',
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(color: Colors.white70),
+                          ),
                     trailing: connected
                         ? null
                         : IconButton(

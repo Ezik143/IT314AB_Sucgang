@@ -70,6 +70,14 @@ lib/
    Credentials are injected at compile time, not bundled as an asset, and
    `dart_defines.json` is git-ignored.
 
+   In VS Code, select the **multi_screen_navigation (debug)** launch
+   configuration, which already passes `--dart-define-from-file`.
+
+   If the home screen reports *Database connection failed*, it now shows the
+   underlying error. The most common cause is launching without the
+   `--dart-define-from-file=dart_defines.json` flag (credentials are then
+   missing), followed by a suspended Neon instance or no internet.
+
 > **Do not run on Flutter Web.** The `postgres` package needs raw TCP sockets;
 > use Android or Windows desktop.
 

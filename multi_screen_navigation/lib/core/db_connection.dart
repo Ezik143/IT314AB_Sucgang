@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:postgres/postgres.dart';
 
 /// Reads database settings from compile-time `--dart-define` values.
@@ -76,15 +77,29 @@ class DatabaseService {
     return connection;
   }
 
+  /// The error from the most recent failed connection attempt, if any.
+  static String? lastError;
+
   Future<bool> testConnection() async {
-    try {
-      final connection = await connectDatabase();
-      await connection.execute('SELECT 1');
-      return true;
-    } catch (_) {
-      await _resetConnection();
-      return false;
+    lastError = null;
+    // Neon suspends idle databases; the first attempt after a pause can fail
+    // while the compute wakes up, so give it one more chance.
+    for (var attempt = 1; attempt <= 2; attempt++) {
+      try {
+        final connection = await connectDatabase();
+        await connection.execute('SELECT 1');
+        lastError = null;
+        return true;
+      } catch (error) {
+        lastError = error.toString();
+        debugPrint('Database connection attempt $attempt failed: $error');
+        await _resetConnection();
+        if (attempt < 2) {
+          await Future<void>.delayed(const Duration(seconds: 2));
+        }
+      }
     }
+    return false;
   }
 
   Future<void> _resetConnection() async {
