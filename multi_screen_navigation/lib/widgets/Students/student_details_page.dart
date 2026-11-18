@@ -3,13 +3,35 @@ import 'package:multi_screen_navigation/model/student.dart';
 import 'package:multi_screen_navigation/viewmodels/student_viewmodel.dart';
 import 'package:multi_screen_navigation/widgets/Students/edit_student_page.dart';
 
-class StudentDetailsPage extends StatelessWidget {
+class StudentDetailsPage extends StatefulWidget {
   final Student student;
 
   const StudentDetailsPage({super.key, required this.student});
 
   @override
+  State<StudentDetailsPage> createState() => _StudentDetailsPageState();
+}
+
+class _StudentDetailsPageState extends State<StudentDetailsPage> {
+  final StudentViewModel _viewModel = StudentViewModel();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.student.studentId != null) {
+      _viewModel.loadStudentRecords(widget.student.studentId!);
+    }
+  }
+
+  @override
+  void dispose() {
+    _viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final student = widget.student;
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -128,6 +150,80 @@ class StudentDetailsPage extends StatelessWidget {
                     const Divider(),
                     _buildDetailRow('Created', student.createdAt),
                   ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Card(
+              elevation: 2,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: ListenableBuilder(
+                  listenable: _viewModel,
+                  builder: (context, child) {
+                    if (_viewModel.isLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (_viewModel.errorMessage != null) {
+                      return Text(
+                        _viewModel.errorMessage!,
+                        style: const TextStyle(color: Colors.red),
+                      );
+                    }
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Enrolled Subjects',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Divider(),
+                        if (_viewModel.enrollments.isEmpty)
+                          const Text('No enrollments')
+                        else
+                          ..._viewModel.enrollments.map(
+                            (enrollment) => ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              title: Text(
+                                '${enrollment.subjectCode ?? 'Subject'}: '
+                                '${enrollment.subjectName ?? 'Unknown subject'}',
+                              ),
+                              subtitle: Text(
+                                '${enrollment.scheduleDescription ?? 'Schedule unavailable'} '
+                                '- ${enrollment.status}',
+                              ),
+                            ),
+                          ),
+                        const SizedBox(height: 8),
+                        const Text(
+                          'Grades',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Divider(),
+                        if (_viewModel.grades.isEmpty)
+                          const Text('No grades')
+                        else
+                          ..._viewModel.grades.map(
+                            (grade) => ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              title: Text(grade.gradeValue.toStringAsFixed(2)),
+                              subtitle: Text(
+                                '${grade.subjectCode ?? 'Subject'}: '
+                                '${grade.subjectName ?? 'Unknown subject'} - '
+                                'Grade ${grade.gradeValue.toStringAsFixed(0)} '
+                                '(${grade.remarks})',
+                              ),
+                            ),
+                          ),
+                      ],
+                    );
+                  },
                 ),
               ),
             ),

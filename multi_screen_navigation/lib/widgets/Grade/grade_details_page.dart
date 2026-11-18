@@ -77,7 +77,15 @@ class GradeDetailsPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _row('Enrollment ID', grade.enrollmentId.toString()),
+                _row('Student', grade.studentName ?? 'Unknown student'),
+                const Divider(),
+                _row(
+                  'Subject',
+                  '${grade.subjectCode ?? ''} '
+                      '${grade.subjectName ?? 'Unknown subject'}',
+                ),
+                const Divider(),
+                _row('Enrollment ID', '#${grade.enrollmentId}'),
                 const Divider(),
                 _row('Grade', grade.gradeValue.toString()),
                 const Divider(),

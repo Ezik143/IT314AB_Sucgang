@@ -17,9 +17,7 @@ class StudentRepository {
       );
 
       return result.map((row) => Student.fromRow(row.toColumnMap())).toList();
-    } finally {
-      await connection.close();
-    }
+    } finally {}
   }
 
   Future<Student?> getStudentById(int studentId) async {
@@ -36,9 +34,7 @@ class StudentRepository {
       }
 
       return Student.fromRow(result.first.toColumnMap());
-    } finally {
-      await connection.close();
-    }
+    } finally {}
   }
 
   Future<void> addStudent(Student student) async {
@@ -55,9 +51,7 @@ class StudentRepository {
         ),
         parameters: student.toParams(),
       );
-    } finally {
-      await connection.close();
-    }
+    } finally {}
   }
 
   Future<void> updateStudent(Student student) async {
@@ -82,9 +76,7 @@ class StudentRepository {
         ),
         parameters: {...student.toParams(), 'student_id': student.studentId},
       );
-    } finally {
-      await connection.close();
-    }
+    } finally {}
   }
 
   Future<void> deleteStudent(int studentId) async {
@@ -99,8 +91,6 @@ class StudentRepository {
         ),
         parameters: {'student_id': studentId},
       );
-    } finally {
-      await connection.close();
-    }
+    } finally {}
   }
 }

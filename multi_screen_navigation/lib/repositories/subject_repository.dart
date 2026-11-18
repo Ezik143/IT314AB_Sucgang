@@ -10,7 +10,11 @@ class SubjectRepository {
     final connection = await _dbService.connectDatabase();
 
     try {
-      final result = await connection.execute('SELECT * FROM subject');
+      final result = await connection.execute(
+        'SELECT * FROM subject '
+        'WHERE is_available = TRUE '
+        'ORDER BY subject_name',
+      );
 
       List<Subject> subjects = [];
 
@@ -20,9 +24,7 @@ class SubjectRepository {
       }
 
       return subjects;
-    } finally {
-      await connection.close();
-    }
+    } finally {}
   }
 
   Future<Subject?> getSubjectById(int subjectId) async {
@@ -39,9 +41,7 @@ class SubjectRepository {
       }
 
       return Subject.fromRow(result.first.toColumnMap());
-    } finally {
-      await connection.close();
-    }
+    } finally {}
   }
 
   Future<void> addSubject(Subject subject) async {
@@ -55,9 +55,7 @@ class SubjectRepository {
         ),
         parameters: subject.toParams(),
       );
-    } finally {
-      await connection.close();
-    }
+    } finally {}
   }
 
   Future<void> updateSubject(Subject subject) async {
@@ -80,9 +78,7 @@ class SubjectRepository {
         ),
         parameters: {...subject.toParams(), 'subject_id': subject.subjectId},
       );
-    } finally {
-      await connection.close();
-    }
+    } finally {}
   }
 
   Future<void> deleteSubject(int subjectId) async {
@@ -96,8 +92,6 @@ class SubjectRepository {
         ),
         parameters: {'subject_id': subjectId},
       );
-    } finally {
-      await connection.close();
-    }
+    } finally {}
   }
 }

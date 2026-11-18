@@ -13,6 +13,8 @@ class GradeListPage extends StatefulWidget {
 
 class _GradeListPageState extends State<GradeListPage> {
   final GradeViewmodel _viewModel = GradeViewmodel();
+  final TextEditingController _searchController = TextEditingController();
+  bool _isSearching = false;
 
   @override
   void initState() {
@@ -22,14 +24,59 @@ class _GradeListPageState extends State<GradeListPage> {
 
   @override
   void dispose() {
+    _searchController.dispose();
     _viewModel.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final title = _isSearching
+        ? TextField(
+            controller: _searchController,
+            autofocus: true,
+            style: const TextStyle(color: Colors.white),
+            cursorColor: Colors.white,
+            decoration: const InputDecoration(
+              hintText: 'Search student name',
+              hintStyle: TextStyle(color: Colors.white70),
+              border: InputBorder.none,
+            ),
+            onChanged: (_) => setState(() {}),
+          )
+        : const Text('Grades');
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Grades'), backgroundColor: Colors.teal),
+      appBar: AppBar(
+        title: title,
+        backgroundColor: Colors.teal,
+        actions: [
+          if (_isSearching)
+            IconButton(
+              tooltip: 'Clear search',
+              icon: const Icon(Icons.clear),
+              onPressed: () {
+                _searchController.clear();
+                setState(() {});
+              },
+            )
+          else
+            IconButton(
+              tooltip: 'Search students',
+              icon: const Icon(Icons.search),
+              onPressed: () => setState(() => _isSearching = true),
+            ),
+          if (_isSearching)
+            IconButton(
+              tooltip: 'Close search',
+              icon: const Icon(Icons.close),
+              onPressed: () {
+                _searchController.clear();
+                setState(() => _isSearching = false);
+              },
+            ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final result = await Navigator.push<bool>(
@@ -70,12 +117,21 @@ class _GradeListPageState extends State<GradeListPage> {
           if (_viewModel.grades.isEmpty) {
             return const Center(child: Text('No grades'));
           }
+          final query = _searchController.text.trim().toLowerCase();
+          final grades = _viewModel.grades.where((grade) {
+            return (grade.studentName ?? '').toLowerCase().contains(query);
+          }).toList();
+          if (grades.isEmpty) {
+            return const Center(
+              child: Text('No grades found for this student'),
+            );
+          }
           return RefreshIndicator(
             onRefresh: _viewModel.loadGrades,
             child: ListView.builder(
-              itemCount: _viewModel.grades.length,
+              itemCount: grades.length,
               itemBuilder: (context, index) {
-                final grade = _viewModel.grades[index];
+                final grade = grades[index];
                 return Card(
                   margin: const EdgeInsets.symmetric(
                     horizontal: 10,
@@ -85,8 +141,13 @@ class _GradeListPageState extends State<GradeListPage> {
                     leading: CircleAvatar(
                       child: Text(grade.gradeValue.toStringAsFixed(0)),
                     ),
-                    title: Text('Enrollment #${grade.enrollmentId}'),
-                    subtitle: Text('${grade.remarks} - ${grade.dateRecorded}'),
+                    title: Text(grade.studentName ?? 'Unknown student'),
+                    subtitle: Text(
+                      '${grade.subjectCode ?? 'Subject'}: '
+                      '${grade.subjectName ?? 'Unknown subject'} - '
+                      'Grade ${grade.gradeValue.toStringAsFixed(0)} '
+                      '(${grade.remarks})',
+                    ),
                     onTap: () async {
                       final result = await Navigator.push<bool>(
                         context,

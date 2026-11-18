@@ -1,6 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:multi_screen_navigation/model/student.dart';
 import 'package:multi_screen_navigation/repositories/student_repository.dart';
+import 'package:multi_screen_navigation/model/enrollment.dart';
+import 'package:multi_screen_navigation/model/grade.dart';
+import 'package:multi_screen_navigation/repositories/enrollment_repository.dart';
+import 'package:multi_screen_navigation/repositories/grade_repository.dart';
 
 class StudentViewModel extends ChangeNotifier {
   final StudentRepository _repository = StudentRepository();
@@ -8,6 +12,8 @@ class StudentViewModel extends ChangeNotifier {
   List<Student> students = [];
   bool isLoading = false;
   String? errorMessage;
+  List<Enrollment> enrollments = [];
+  List<Grade> grades = [];
 
   Future<void> loadStudents() async {
     isLoading = true;
@@ -56,6 +62,23 @@ class StudentViewModel extends ChangeNotifier {
       errorMessage = error.toString();
       notifyListeners();
       return false;
+    }
+  }
+
+  Future<void> loadStudentRecords(int studentId) async {
+    isLoading = true;
+    errorMessage = null;
+    notifyListeners();
+    try {
+      enrollments = await EnrollmentRepository().getEnrollmentsByStudent(
+        studentId,
+      );
+      grades = await GradeRepository().getGradesByStudent(studentId);
+    } catch (error) {
+      errorMessage = error.toString();
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
   }
 }
