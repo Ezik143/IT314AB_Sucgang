@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:multi_screen_navigation/Models/student.dart';
+import 'package:multi_screen_navigation/model/student.dart';
 import 'package:multi_screen_navigation/repositories/student_repository.dart';
 
 class StudentViewModel extends ChangeNotifier {

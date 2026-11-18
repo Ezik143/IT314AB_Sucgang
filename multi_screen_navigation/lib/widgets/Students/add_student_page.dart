@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:multi_screen_navigation/Models/student.dart';
+import 'package:multi_screen_navigation/model/student.dart';
 import 'package:multi_screen_navigation/viewmodels/student_viewmodel.dart';
 
 class AddStudentPage extends StatefulWidget {

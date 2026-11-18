@@ -1,7 +1,7 @@
 import 'package:postgres/postgres.dart';
 
 import '../core/db_connection.dart';
-import '../Models/student.dart';
+import '../model/student.dart';
 
 class StudentRepository {
   final DatabaseService _dbService = DatabaseService();

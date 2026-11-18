@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:multi_screen_navigation/widgets/Students/student_list_page.dart';
+import 'package:multi_screen_navigation/widgets/Subject/subject_list_page.dart';
+import 'package:multi_screen_navigation/widgets/Grade/grade_list_page.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
@@ -37,7 +39,7 @@ class MainPage extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => StudentListPage()),
+                  MaterialPageRoute(builder: (context) => SubjectListPage()),
                 );
               },
               child: Card(
@@ -48,6 +50,29 @@ class MainPage extends StatelessWidget {
                   child: Center(
                     child: Text(
                       "Subject",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const GradeListPage(),
+                  ),
+                );
+              },
+              child: Card(
+                color: Colors.teal,
+                child: const SizedBox(
+                  width: 300,
+                  height: 150,
+                  child: Center(
+                    child: Text(
+                      'Grades',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
