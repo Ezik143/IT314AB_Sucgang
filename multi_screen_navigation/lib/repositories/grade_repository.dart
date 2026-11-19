@@ -9,7 +9,9 @@ class GradeRepository {
   Future<List<Grade>> getAllGrades() async {
     final connection = await _dbService.connectDatabase();
     final result = await connection.execute(
-      'SELECT g.*, s.first_name || \' \' || s.last_name AS student_name, '
+      'SELECT g.*, '
+      'to_char(g.date_recorded, \'YYYY-MM-DD\') AS date_recorded_text, '
+      's.first_name || \' \' || s.last_name AS student_name, '
       'sub.subject_code, sub.subject_name '
       'FROM grades g '
       'LEFT JOIN enrollment e ON e.enrollment_id = g.enrollment_id '
@@ -64,7 +66,9 @@ class GradeRepository {
     final connection = await _dbService.connectDatabase();
     final result = await connection.execute(
       Sql.named(
-        'SELECT g.*, sub.subject_code, sub.subject_name '
+        'SELECT g.*, '
+        'to_char(g.date_recorded, \'YYYY-MM-DD\') AS date_recorded_text, '
+        'sub.subject_code, sub.subject_name '
         'FROM grades g '
         'LEFT JOIN enrollment e ON e.enrollment_id = g.enrollment_id '
         'LEFT JOIN subject sub ON sub.subject_id = e.subject_id '

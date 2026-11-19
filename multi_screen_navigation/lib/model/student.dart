@@ -1,5 +1,3 @@
-import '../core/formatting.dart';
-
 class Student {
   final int? studentId;
   final String studentNumber;
@@ -35,7 +33,7 @@ class Student {
       course: row['course'],
       yearLevel: row['year_level'],
       contactNumber: row['contact_number'] ?? '',
-      createdAt: formatDate(row['created_at']),
+      createdAt: row['created_at_text'] ?? '',
       isDeleted: row['is_deleted'] == true,
     );
   }

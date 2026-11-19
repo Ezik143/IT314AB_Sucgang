@@ -9,7 +9,9 @@ class StudentRepository {
   Future<List<Student>> getAllStudents() async {
     final connection = await _dbService.connectDatabase();
     final result = await connection.execute(
-      'SELECT * FROM student '
+      'SELECT *, '
+      'to_char(created_at, \'YYYY-MM-DD\') AS created_at_text '
+      'FROM student '
       'WHERE is_deleted = FALSE '
       'ORDER BY last_name, first_name',
     );
@@ -19,7 +21,10 @@ class StudentRepository {
   Future<Student?> getStudentById(int studentId) async {
     final connection = await _dbService.connectDatabase();
     final result = await connection.execute(
-      Sql.named('SELECT * FROM student WHERE student_id = @student_id'),
+      Sql.named(
+        'SELECT *, to_char(created_at, \'YYYY-MM-DD\') AS created_at_text '
+        'FROM student WHERE student_id = @student_id',
+      ),
       parameters: {'student_id': studentId},
     );
     if (result.isEmpty) {

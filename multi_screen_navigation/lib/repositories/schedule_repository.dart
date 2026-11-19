@@ -8,8 +8,8 @@ class ScheduleRepository {
 
   static const _selectSchedules =
       'SELECT sch.schedule_id, sch.subject_id, sch.day_of_week, '
-      'sch.start_time::text AS start_time, '
-      'sch.end_time::text AS end_time, '
+      'to_char(sch.start_time, \'HH24:MI\') AS start_time, '
+      'to_char(sch.end_time, \'HH24:MI\') AS end_time, '
       'sch.room, sch.slot_capacity, '
       'sub.subject_code, sub.subject_name '
       'FROM schedule sch '

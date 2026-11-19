@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:multi_screen_navigation/core/error_message.dart';
 import 'package:multi_screen_navigation/model/subject.dart';
 import 'package:multi_screen_navigation/repositories/subject_repository.dart';
+import 'package:postgres/postgres.dart';
 
 class SubjectViewmodel extends ChangeNotifier {
   final SubjectRepository _repository = SubjectRepository();
@@ -10,6 +10,18 @@ class SubjectViewmodel extends ChangeNotifier {
   bool isLoading = false;
   String? errorMessage;
 
+  String _friendlyError(Object error) {
+    if (error is ServerException) {
+      switch (error.constraintName) {
+        case 'uq_subject_subject_code':
+          return 'A subject with this subject code already exists.';
+        case 'chk_subject_units':
+          return 'Units must be between 1 and 12.';
+      }
+    }
+    return error.toString();
+  }
+
   Future<void> loadSubjects() async {
     isLoading = true;
     errorMessage = null;
@@ -17,7 +29,7 @@ class SubjectViewmodel extends ChangeNotifier {
     try {
       subjects = await _repository.getAllSubjects();
     } catch (error) {
-      errorMessage = friendlyError(error);
+      errorMessage = _friendlyError(error);
     }
     isLoading = false;
     notifyListeners();
@@ -29,7 +41,7 @@ class SubjectViewmodel extends ChangeNotifier {
       await loadSubjects();
       return true;
     } catch (error) {
-      errorMessage = friendlyError(error);
+      errorMessage = _friendlyError(error);
       notifyListeners();
       return false;
     }
@@ -41,7 +53,7 @@ class SubjectViewmodel extends ChangeNotifier {
       await loadSubjects();
       return true;
     } catch (error) {
-      errorMessage = friendlyError(error);
+      errorMessage = _friendlyError(error);
       notifyListeners();
       return false;
     }
@@ -53,7 +65,7 @@ class SubjectViewmodel extends ChangeNotifier {
       await loadSubjects();
       return true;
     } catch (error) {
-      errorMessage = friendlyError(error);
+      errorMessage = _friendlyError(error);
       notifyListeners();
       return false;
     }

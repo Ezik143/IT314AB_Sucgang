@@ -29,11 +29,7 @@ class _AddEnrollmentPageState extends State<AddEnrollmentPage> {
   int? _subjectId;
   int? _scheduleId;
   final _enrolledAt = TextEditingController(
-    text: DateTime.now()
-        .toIso8601String()
-        .replaceAll('T', ' ')
-        .split('.')
-        .first,
+    text: DateTime.now().toIso8601String().split('T').first,
   );
   bool _isSaving = false;
   @override
@@ -179,7 +175,7 @@ class _AddEnrollmentPageState extends State<AddEnrollmentPage> {
               onChanged: (value) => setState(() => _scheduleId = value),
             ),
             const SizedBox(height: 15),
-            _textField(_enrolledAt, 'Enrolled At (YYYY-MM-DD HH:mm:ss)'),
+            _textField(_enrolledAt, 'Enrolled At (YYYY-MM-DD)'),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _isSaving ? null : _submit,

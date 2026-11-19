@@ -215,7 +215,7 @@ class _EditEnrollmentPageState extends State<EditEnrollmentPage> {
               onChanged: (value) => setState(() => _scheduleId = value!),
             ),
             const SizedBox(height: 15),
-            _textField(_enrolledAt, 'Enrolled At (YYYY-MM-DD HH:mm:ss)'),
+            _textField(_enrolledAt, 'Enrolled At (YYYY-MM-DD)'),
             DropdownButtonFormField<String>(
               initialValue: _status,
               decoration: const InputDecoration(

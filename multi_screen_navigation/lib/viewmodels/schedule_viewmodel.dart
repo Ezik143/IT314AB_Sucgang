@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 
-import '../core/error_message.dart';
 import '../model/schedule.dart';
 import '../repositories/schedule_repository.dart';
+import 'package:postgres/postgres.dart';
 
 class ScheduleViewModel extends ChangeNotifier {
   final ScheduleRepository _repository = ScheduleRepository();
@@ -11,6 +11,20 @@ class ScheduleViewModel extends ChangeNotifier {
   bool isLoading = false;
   String? errorMessage;
 
+  String _friendlyError(Object error) {
+    if (error is ServerException) {
+      switch (error.constraintName) {
+        case 'chk_schedule_time':
+          return 'End time must be later than the start time.';
+        case 'chk_schedule_day':
+          return 'Day must be Monday to Sunday.';
+        case 'chk_schedule_slot_capacity':
+          return 'Slot capacity must be greater than zero.';
+      }
+    }
+    return error.toString();
+  }
+
   Future<void> loadSchedules() async {
     isLoading = true;
     errorMessage = null;
@@ -18,7 +32,7 @@ class ScheduleViewModel extends ChangeNotifier {
     try {
       schedules = await _repository.getAllSchedules();
     } catch (error) {
-      errorMessage = friendlyError(error);
+      errorMessage = _friendlyError(error);
     } finally {
       isLoading = false;
       notifyListeners();
@@ -32,7 +46,7 @@ class ScheduleViewModel extends ChangeNotifier {
     try {
       schedules = await _repository.getSchedulesBySubject(subjectId);
     } catch (error) {
-      errorMessage = friendlyError(error);
+      errorMessage = _friendlyError(error);
     } finally {
       isLoading = false;
       notifyListeners();
@@ -45,7 +59,7 @@ class ScheduleViewModel extends ChangeNotifier {
       await loadSchedules();
       return true;
     } catch (error) {
-      errorMessage = friendlyError(error);
+      errorMessage = _friendlyError(error);
       notifyListeners();
       return false;
     }
@@ -57,7 +71,7 @@ class ScheduleViewModel extends ChangeNotifier {
       await loadSchedules();
       return true;
     } catch (error) {
-      errorMessage = friendlyError(error);
+      errorMessage = _friendlyError(error);
       notifyListeners();
       return false;
     }
@@ -69,7 +83,7 @@ class ScheduleViewModel extends ChangeNotifier {
       await loadSchedules();
       return true;
     } catch (error) {
-      errorMessage = friendlyError(error);
+      errorMessage = _friendlyError(error);
       notifyListeners();
       return false;
     }

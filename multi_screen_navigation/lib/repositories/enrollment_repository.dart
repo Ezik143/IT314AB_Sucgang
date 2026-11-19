@@ -10,6 +10,7 @@ class EnrollmentRepository {
     final connection = await _dbService.connectDatabase();
     final result = await connection.execute(
       'SELECT e.*, '
+      'to_char(e.enrolled_at, \'YYYY-MM-DD\') AS enrolled_at_text, '
       's.first_name || \' \' || s.last_name AS student_name, '
       'sub.subject_code, sub.subject_name, '
       'sch.day_of_week || \' \' || sch.start_time::text || \' - \' || '
@@ -27,7 +28,8 @@ class EnrollmentRepository {
     final connection = await _dbService.connectDatabase();
     final result = await connection.execute(
       Sql.named(
-        'SELECT * FROM enrollment WHERE enrollment_id = @enrollment_id',
+        'SELECT *, to_char(enrolled_at, \'YYYY-MM-DD\') AS enrolled_at_text '
+        'FROM enrollment WHERE enrollment_id = @enrollment_id',
       ),
       parameters: {'enrollment_id': enrollmentId},
     );
@@ -138,7 +140,9 @@ class EnrollmentRepository {
     final connection = await _dbService.connectDatabase();
     final result = await connection.execute(
       Sql.named(
-        'SELECT e.*, sub.subject_code, sub.subject_name, '
+        'SELECT e.*, '
+        'to_char(e.enrolled_at, \'YYYY-MM-DD\') AS enrolled_at_text, '
+        'sub.subject_code, sub.subject_name, '
         'sch.day_of_week || \' \' || sch.start_time::text || \' - \' || '
         'sch.end_time::text || \' in \' || sch.room AS schedule_description '
         'FROM enrollment e '

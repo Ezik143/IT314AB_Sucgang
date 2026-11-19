@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
-import 'package:multi_screen_navigation/core/error_message.dart';
 import 'package:multi_screen_navigation/model/enrollment.dart';
 import 'package:multi_screen_navigation/model/grade.dart';
 import 'package:multi_screen_navigation/model/student.dart';
 import 'package:multi_screen_navigation/repositories/enrollment_repository.dart';
 import 'package:multi_screen_navigation/repositories/grade_repository.dart';
 import 'package:multi_screen_navigation/repositories/student_repository.dart';
+import 'package:postgres/postgres.dart';
 
 class StudentViewModel extends ChangeNotifier {
   final StudentRepository _repository = StudentRepository();
@@ -16,6 +16,20 @@ class StudentViewModel extends ChangeNotifier {
   List<Enrollment> enrollments = [];
   List<Grade> grades = [];
 
+  String _friendlyError(Object error) {
+    if (error is ServerException) {
+      switch (error.constraintName) {
+        case 'uq_student_email':
+          return 'A student with this email address already exists.';
+        case 'uq_student_student_number':
+          return 'A student with this student number already exists.';
+        case 'chk_student_year_level':
+          return 'Year level must be between 1 and 4.';
+      }
+    }
+    return error.toString();
+  }
+
   Future<void> loadStudents() async {
     isLoading = true;
     errorMessage = null;
@@ -24,7 +38,7 @@ class StudentViewModel extends ChangeNotifier {
     try {
       students = await _repository.getAllStudents();
     } catch (error) {
-      errorMessage = friendlyError(error);
+      errorMessage = _friendlyError(error);
     }
 
     isLoading = false;
@@ -37,7 +51,7 @@ class StudentViewModel extends ChangeNotifier {
       await loadStudents();
       return true;
     } catch (error) {
-      errorMessage = friendlyError(error);
+      errorMessage = _friendlyError(error);
       notifyListeners();
       return false;
     }
@@ -49,7 +63,7 @@ class StudentViewModel extends ChangeNotifier {
       await loadStudents();
       return true;
     } catch (error) {
-      errorMessage = friendlyError(error);
+      errorMessage = _friendlyError(error);
       notifyListeners();
       return false;
     }
@@ -61,7 +75,7 @@ class StudentViewModel extends ChangeNotifier {
       await loadStudents();
       return true;
     } catch (error) {
-      errorMessage = friendlyError(error);
+      errorMessage = _friendlyError(error);
       notifyListeners();
       return false;
     }
@@ -77,7 +91,7 @@ class StudentViewModel extends ChangeNotifier {
       );
       grades = await GradeRepository().getGradesByStudent(studentId);
     } catch (error) {
-      errorMessage = friendlyError(error);
+      errorMessage = _friendlyError(error);
     } finally {
       isLoading = false;
       notifyListeners();

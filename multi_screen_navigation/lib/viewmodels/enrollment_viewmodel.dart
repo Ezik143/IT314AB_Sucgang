@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 
-import '../core/error_message.dart';
 import '../model/enrollment.dart';
 import '../repositories/enrollment_repository.dart';
+import 'package:postgres/postgres.dart';
 
 class EnrollmentViewModel extends ChangeNotifier {
   final EnrollmentRepository _repository = EnrollmentRepository();
@@ -11,6 +11,16 @@ class EnrollmentViewModel extends ChangeNotifier {
   bool isLoading = false;
   String? errorMessage;
 
+  String _friendlyError(Object error) {
+    if (error is ServerException) {
+      switch (error.constraintName) {
+        case 'uq_enrollment_student_subject':
+          return 'The student is already enrolled in this subject.';
+      }
+    }
+    return error.toString();
+  }
+
   Future<void> loadEnrollments() async {
     isLoading = true;
     errorMessage = null;
@@ -18,7 +28,7 @@ class EnrollmentViewModel extends ChangeNotifier {
     try {
       enrollments = await _repository.getAllEnrollments();
     } catch (error) {
-      errorMessage = friendlyError(error);
+      errorMessage = _friendlyError(error);
     } finally {
       isLoading = false;
       notifyListeners();
@@ -31,7 +41,7 @@ class EnrollmentViewModel extends ChangeNotifier {
       await loadEnrollments();
       return true;
     } catch (error) {
-      errorMessage = friendlyError(error);
+      errorMessage = _friendlyError(error);
       notifyListeners();
       return false;
     }
@@ -43,7 +53,7 @@ class EnrollmentViewModel extends ChangeNotifier {
       await loadEnrollments();
       return true;
     } catch (error) {
-      errorMessage = friendlyError(error);
+      errorMessage = _friendlyError(error);
       notifyListeners();
       return false;
     }
@@ -55,7 +65,7 @@ class EnrollmentViewModel extends ChangeNotifier {
       await loadEnrollments();
       return true;
     } catch (error) {
-      errorMessage = friendlyError(error);
+      errorMessage = _friendlyError(error);
       notifyListeners();
       return false;
     }
